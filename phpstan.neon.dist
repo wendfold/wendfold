@@ -1,0 +1,34 @@
+# PHPStan for Wendfold.
+#
+# Level 5, with phpstan-baseline.neon holding the findings that already exist,
+# so CI fails only on new ones. Regenerate the baseline only on purpose:
+#   JOOMLA_ROOT=/path/to/joomla-6.2.0 vendor/bin/phpstan analyse -c phpstan.neon.dist \
+#       --level=5 --memory-limit=1G --generate-baseline=phpstan-baseline.neon
+# reportUnmatchedIgnoredErrors makes a fixed finding fail until its baseline
+# entry is removed, so the baseline only ever shrinks.
+#
+# phpstan/bootstrap.php loads a stock Joomla 6.2.0 tree (JOOMLA_ROOT) so Joomla
+# classes are typed; CI downloads it. phpVersion analyses the code as PHP 8.3,
+# the lowest supported version, whichever PHP runs PHPStan: functions added in
+# 8.4 or 8.5 are reported, and the results match on every CI matrix version.
+#
+# Bundled third-party PHP is scanned so our code can call it, and is not analysed.
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    phpVersion: 80300
+    reportUnmatchedIgnoredErrors: true
+    bootstrapFiles:
+        - phpstan/bootstrap.php
+    paths:
+        - com_wendfold
+        - plg_user_wendfold
+        - plg_task_wendfold
+        - plg_privacy_wendfold
+        - pkg_wendfold
+    excludePaths:
+        analyse:
+            - com_wendfold/admin/vendor/*
+            - com_wendfold/media/vendor/*

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+	<fieldset name="details" label="COM_WENDFOLD_EVENT_TYPE_DETAILS">
+		<field name="id" type="hidden" filter="integer" />
+		<field
+			name="title"
+			type="text"
+			label="JGLOBAL_TITLE"
+			description="COM_WENDFOLD_LOOKUP_TITLE_DESC"
+			required="true"
+			maxlength="255"
+			filter="string"
+		/>
+		<field
+			name="behavior"
+			type="list"
+			label="COM_WENDFOLD_EVENT_TYPE_BEHAVIOR"
+			description="COM_WENDFOLD_EVENT_TYPE_BEHAVIOR_DESC"
+			default="4"
+			filter="integer"
+			validate="options"
+			required="true"
+		>
+			<option value="1">COM_WENDFOLD_EVENT_BEHAVIOR_RIDE</option>
+			<option value="2">COM_WENDFOLD_EVENT_BEHAVIOR_MEETING</option>
+			<option value="3">COM_WENDFOLD_EVENT_BEHAVIOR_OVERNIGHT</option>
+			<option value="4">COM_WENDFOLD_EVENT_BEHAVIOR_GENERAL</option>
+		</field>
+		<field
+			name="default_riding"
+			type="radio"
+			label="COM_WENDFOLD_EVENT_TYPE_DEFAULT_RIDING"
+			description="COM_WENDFOLD_EVENT_TYPE_DEFAULT_RIDING_DESC"
+			default="0"
+			filter="integer"
+			layout="joomla.form.field.radio.switcher"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="default_workflow_mode"
+			type="list"
+			label="COM_WENDFOLD_EVENT_TYPE_DEFAULT_WORKFLOW"
+			description="COM_WENDFOLD_EVENT_TYPE_DEFAULT_WORKFLOW_DESC"
+			default="1"
+			filter="integer"
+			validate="options"
+		>
+			<option value="1">COM_WENDFOLD_WORKFLOW_STANDARD_RSVP</option>
+			<option value="2">COM_WENDFOLD_WORKFLOW_RIDE_OPS</option>
+			<option value="3">COM_WENDFOLD_WORKFLOW_MEETING_ROLLCALL</option>
+			<option value="4">COM_WENDFOLD_WORKFLOW_VOLUNTEER</option>
+			<option value="5">COM_WENDFOLD_WORKFLOW_OVERNIGHT</option>
+		</field>
+		<field
+			name="published"
+			type="list"
+			label="JSTATUS"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field
+			name="ordering"
+			type="number"
+			label="JGRID_HEADING_ORDERING"
+			default="0"
+			filter="integer"
+		/>
+	</fieldset>
+</form>

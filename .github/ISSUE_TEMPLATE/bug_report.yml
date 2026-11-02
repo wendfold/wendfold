@@ -1,0 +1,123 @@
+name: Bug report
+description: Report a reproducible defect in Wendfold.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug.
+
+        **Security vulnerabilities must not be reported here.** Use [private vulnerability reporting](https://github.com/wendfold/wendfold/security/advisories/new) or email security@wendfold.com instead (see SECURITY.md).
+
+        Please remove passwords, tokens, and any real member or chapter data from what you paste.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the current behavior and why it is a problem.
+      placeholder: After saving an event, the location field is blank when the event is opened for editing again.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Exact steps so someone else can reproduce the issue.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Save ...
+        4. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install_path
+    attributes:
+      label: How was Wendfold installed?
+      options:
+        - pkg_wendfold package ZIP upload
+        - Joomla update (System > Update > Extensions)
+        - Built from source
+        - Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Package install, update, or uninstall
+        - Administrator UI
+        - Front-end views
+        - Events, RSVP, or attendance
+        - Members, dues, or officers
+        - Reports or milestones
+        - Permissions or visibility
+        - Scheduled tasks (plg_task_wendfold)
+        - User lifecycle (plg_user_wendfold)
+        - Privacy requests (plg_privacy_wendfold)
+        - Build or release tooling
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: wendfold_version
+    attributes:
+      label: Wendfold version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: joomla_version
+    attributes:
+      label: Joomla version
+      placeholder: "6.2.0"
+    validations:
+      required: true
+
+  - type: input
+    id: php_version
+    attributes:
+      label: PHP version
+      placeholder: "8.3.x"
+    validations:
+      required: true
+
+  - type: input
+    id: database
+    attributes:
+      label: Database engine and version
+      placeholder: MySQL 8.4 / MariaDB 11.4
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs, screenshots, or console output
+      description: Joomla error log, browser console, or screenshots. Redact personal data first.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues first.
+          required: true
+        - label: I removed passwords, tokens, and personal member data.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

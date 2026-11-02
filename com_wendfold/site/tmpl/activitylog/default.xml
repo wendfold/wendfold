@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_WENDFOLD_ACTIVITY_MENU_TITLE" option="COM_WENDFOLD_ACTIVITY_MENU_DESC">
+		<message><![CDATA[COM_WENDFOLD_ACTIVITY_MENU_DESC]]></message>
+	</layout>
+</metadata>

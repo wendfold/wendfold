@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!--
+  PHP_CodeSniffer configuration for Wendfold.
+
+  Base: the Joomla coding standard (joomla/coding-standards), installed as a
+  pinned Composer dev dependency together with the PHP_CodeSniffer 3.x release
+  it supports. See composer.json and composer.lock for the exact versions.
+  joomla/coding-standards requires PHP_CodeSniffer ^3.4, so do not use a
+  global PHP_CodeSniffer 4 install with this ruleset.
+
+  The installed_paths setting below registers the Composer-installed standard
+  with PHP_CodeSniffer (relative paths resolve from
+  vendor/squizlabs/php_codesniffer), so no Composer plugin and no global
+  configuration is needed. Run composer install first.
+
+  CI runs this in report-only mode by passing the runtime settings
+  ignore_errors_on_exit=1 and ignore_warnings_on_exit=1 (see the PHPCS step in
+  .github/workflows/ci.yml and CONTRIBUTING.md). Remove those two settings once
+  the tree is clean, so new violations fail the build.
+
+  Run locally from the repository root:  vendor/bin/phpcs   (picks up this file automatically)
+  Auto-fix what can be fixed:            vendor/bin/phpcbf
+  Local override:                        copy this file to phpcs.xml (git-ignored)
+-->
+<ruleset name="Wendfold">
+    <description>Wendfold coding standard (Joomla coding standard)</description>
+
+    <file>com_wendfold</file>
+    <file>pkg_wendfold</file>
+    <file>plg_user_wendfold</file>
+    <file>plg_task_wendfold</file>
+    <file>plg_privacy_wendfold</file>
+    <file>tests/PrivacyPluginTest.php</file>
+    <file>tests/CompanionPluginEnableTest.php</file>
+    <file>tests/MailerErrorRedactorTest.php</file>
+    <file>tests/DemoSeedScriptTest.php</file>
+    <file>tests/support/MemoryPrivacyMemberStore.php</file>
+    <file>dev</file>
+
+    <!-- Third-party code and dependencies -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <!-- Build output (written by build/build_release.py) -->
+    <exclude-pattern>build/dist/*</exclude-pattern>
+    <exclude-pattern>build/staging/*</exclude-pattern>
+    <exclude-pattern>pkg_wendfold/constituents/*</exclude-pattern>
+
+    <!-- Minified media assets -->
+    <exclude-pattern>*/media/*.min.js</exclude-pattern>
+    <exclude-pattern>*/media/*.min.css</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="encoding" value="utf-8"/>
+    <arg value="sp"/>
+    <arg name="parallel" value="8"/>
+    <arg name="report-width" value="120"/>
+
+    <config name="php_version" value="80300"/>
+    <config name="installed_paths" value="../../joomla/coding-standards"/>
+
+    <rule ref="Joomla">
+        <!--
+          The Joomla standard also enables six Squiz.CSS sniffs, which
+          PHP_CodeSniffer 3.9+ marks as deprecated. They never run here because
+          only .php files are scanned (extensions=php), so they are excluded to
+          keep the deprecation notice out of every report.
+        -->
+        <exclude name="Squiz.CSS"/>
+    </rule>
+
+    <!--
+      Layout templates (tmpl/) mix HTML with PHP alternative syntax
+      (if (...) : ... endif;). Several sniffs in the Joomla standard do not
+      understand that and their fixers mangle it, for example by moving the
+      colon onto its own line. These are the same template exclusions as the
+      Joomla-CMS example ruleset that ships with joomla/coding-standards
+      (Joomla/ExampleRulesets/Joomla-CMS/ruleset.xml).
+    -->
+    <rule ref="Generic.ControlStructures.InlineControlStructure">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Files.EndFileNewline">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Formatting.DisallowMultipleStatements">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Strings.UnnecessaryStringConcat">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="PEAR.ControlStructures.MultiLineCondition">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionDeclaration">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Commenting.BlockComment">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Zend.Files.ClosingTag">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Joomla.Commenting.SingleComment">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Joomla.ControlStructures.ControlSignature">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Joomla.ControlStructures.ControlStructuresBrackets">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Joomla.ControlStructures.WhiteSpaceBefore">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+    <rule ref="Joomla.Operators.ValidLogicalOperators">
+        <exclude-pattern>*/tmpl/*</exclude-pattern>
+    </rule>
+</ruleset>

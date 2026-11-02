@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="user" method="upgrade">
+    <name>User - Wendfold</name>
+    <creationDate>2026-11-02</creationDate>
+    <author>Adan Lozano</author>
+    <authorEmail>support@wendfold.com</authorEmail>
+    <authorUrl>https://wendfold.com</authorUrl>
+    <copyright>Copyright (C) 2026 Adan Lozano</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>1.0.0</version>
+    <description>Companion plugin for Wendfold. Creates or restores linked member profiles when Joomla users are created and soft-deactivates profiles when Joomla users are deleted.</description>
+    <element>wendfold</element>
+    <namespace path="src">Wendfold\Plugin\User\Wendfold</namespace>
+
+    <files>
+        <folder>services</folder>
+        <folder>src</folder>
+        <filename plugin="wendfold">wendfold.php</filename>
+        <filename>LICENSE.txt</filename>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_user_wendfold.ini</language>
+        <language tag="en-GB">en-GB/plg_user_wendfold.sys.ini</language>
+    </languages>
+
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+
+                <field
+                    name="auto_create_profile"
+                    type="checkbox"
+                    default="1"
+                    label="PLG_USER_WENDFOLD_PARAM_AUTO_CREATE_LABEL"
+                    description="PLG_USER_WENDFOLD_PARAM_AUTO_CREATE_DESC"
+                />
+
+                <field
+                    name="default_published"
+                    type="list"
+                    default="0"
+                    label="PLG_USER_WENDFOLD_PARAM_DEFAULT_PUBLISHED_LABEL"
+                    description="PLG_USER_WENDFOLD_PARAM_DEFAULT_PUBLISHED_DESC"
+                >
+                    <option value="0">PLG_USER_WENDFOLD_PARAM_PUBLISHED_PENDING</option>
+                    <option value="1">PLG_USER_WENDFOLD_PARAM_PUBLISHED_ACTIVE</option>
+                </field>
+
+                <field
+                    name="notify_on_create"
+                    type="checkbox"
+                    default="0"
+                    label="PLG_USER_WENDFOLD_PARAM_NOTIFY_LABEL"
+                    description="PLG_USER_WENDFOLD_PARAM_NOTIFY_DESC"
+                />
+
+            </fieldset>
+        </fields>
+    </config>
+</extension>

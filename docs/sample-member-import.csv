@@ -1,0 +1,4 @@
+Member ID,First Name,Last Name,Email,Phone,Address,City,State,Postal Code,Country,Join Date,Expiry Date,Membership Type,Life Member,Status,Chapter
+10001,Alex,Rivera,alex.rivera@example.com,555-0101,"12 Harbor Lane, Suite 2",Seabrook,WA,98101,US,2019-03-15,2027-03-15,Full,No,Active,100
+10002,Blair,Nguyen,blair.nguyen@example.com,555-0102,88 Market Street,Portland,OR,97201,US,2018-06-01,2026-06-01,Associate,No,Active,100
+10003,Casey,Okoye,casey.okoye@example.com,555-0103,5 Station Road,Austin,TX,73301,US,2015-01-10,2028-01-10,Life,Yes,Active,100

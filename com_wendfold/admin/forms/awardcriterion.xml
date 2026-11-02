@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+	<field name="id" type="hidden" filter="integer" default="0" />
+
+	<field
+		name="criterion_type"
+		type="list"
+		label="COM_WENDFOLD_AWARD_CRITERION_TYPE_LABEL"
+		description="COM_WENDFOLD_AWARD_CRITERION_TYPE_DESC"
+		default="1"
+		filter="integer"
+		required="true"
+	>
+		<option value="1">COM_WENDFOLD_AWARD_CRITERION_METRIC</option>
+		<option value="2">COM_WENDFOLD_AWARD_CRITERION_MEMBERSHIP_YEARS</option>
+		<option value="3">COM_WENDFOLD_AWARD_CRITERION_HOLDS_AWARD</option>
+	</field>
+
+	<field
+		name="metric_id"
+		type="sql"
+		label="COM_WENDFOLD_AWARD_CRITERION_METRIC_LABEL"
+		description="COM_WENDFOLD_AWARD_CRITERION_METRIC_DESC"
+		query="SELECT id AS value, title AS text FROM #__wendfold_metric_definitions WHERE published = 1 ORDER BY ordering ASC, title ASC"
+		key_field="value"
+		value_field="text"
+		header="COM_WENDFOLD_AWARD_CRITERION_METRIC_NONE"
+		translate="true"
+		filter="integer"
+	/>
+
+	<field
+		name="required_award_id"
+		type="sql"
+		label="COM_WENDFOLD_AWARD_CRITERION_REQUIRED_LABEL"
+		description="COM_WENDFOLD_AWARD_CRITERION_REQUIRED_DESC"
+		query="SELECT id AS value, title AS text FROM #__wendfold_award_definitions WHERE published = 1 ORDER BY ordering ASC, title ASC"
+		key_field="value"
+		value_field="text"
+		header="COM_WENDFOLD_AWARD_CRITERION_REQUIRED_NONE"
+		translate="true"
+		filter="integer"
+	/>
+
+	<field
+		name="threshold"
+		type="number"
+		label="COM_WENDFOLD_AWARD_CRITERION_THRESHOLD_LABEL"
+		description="COM_WENDFOLD_AWARD_CRITERION_THRESHOLD_DESC"
+		required="true"
+		min="1"
+		step="0.001"
+		filter="float"
+	/>
+
+	<field
+		name="tier_step"
+		type="number"
+		label="COM_WENDFOLD_AWARD_CRITERION_TIER_STEP_LABEL"
+		description="COM_WENDFOLD_AWARD_CRITERION_TIER_STEP_DESC"
+		min="0"
+		step="0.001"
+		filter="float"
+	/>
+</form>

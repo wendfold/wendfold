@@ -1,0 +1,399 @@
+# Continuous integration for Wendfold.
+#
+# Runs on pull requests and on pushes to main (branch pushes are covered by
+# their pull_request run, so a PR push runs CI once), and is also callable from release.yml
+# (workflow_call) so a tag cannot produce a release unless CI passes.
+#
+# Required status checks for the main ruleset (job name x matrix):
+#   "CI (PHP 8.3)", "CI (PHP 8.4)", "CI (PHP 8.5)" and "Schema"
+#
+# Actions are pinned to full commit SHAs; Dependabot (github-actions and
+# composer, weekly) proposes updates.
+#   actions/checkout        v7.0.1  3d3c42e5aac5ba805825da76410c181273ba90b1
+#   shivammathur/setup-php  2.40.0  eb7c497e18156a6bbabfef1d3a82760b9eda3962
+#   actions/upload-artifact v7.0.2  cf430e030ddbb5b0abf93d22962f4752f3646cd9
+#
+# PHPUnit and PHPStan versions come from composer.lock. PHPStan analyses
+# against a stock Joomla 6.2.0 Full Package downloaded from the joomla-cms
+# GitHub release and checked against the SHA-256 pinned below; it fails only on
+# findings that are not in phpstan-baseline.neon.
+#
+# PHP security floor: setup-php resolves a minor version ("8.4") to whatever
+# build the runner already has or its cached builds provide. env update=true
+# makes it update to the latest patch, and the "PHP security floor" step fails
+# the job if PHP is still older than the release that fixes CVE-2026-109618 and
+# CVE-2026-109619 (GHSA-w8hw-w9fx-j79w, GHSA-6wmf-4rv5-p3rp, php.net
+# 21 Oct 2026). Raise the floors when a later PHP security release ships, and
+# add a row before adding a new minor to the matrix (an unknown minor fails).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags-ignore: ["**"]
+  pull_request:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ci:
+    name: CI (PHP ${{ matrix.php }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.3", "8.4", "8.5"]
+    env:
+      # Composer itself is pinned (2.9.8 or later is required: older releases
+      # can print the GITHUB_TOKEN that setup-php configures, see
+      # GHSA-f9f8-rm49-7jv2). PHP_CodeSniffer and the Joomla coding standard
+      # come from composer.lock (require-dev), not from setup-php.
+      COMPOSER_VERSION: "2.10.3"
+      # Joomla tree for PHPStan only (never shipped). Bump both together.
+      JOOMLA_VERSION: "6.2.0"
+      JOOMLA_SHA256: "eaafc68b5990d7b9dd9156656d4c3c3547743d1d7a85682a92e2f9121b58f018"
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Pull requests need full history so the changed-files PHPCS step can
+          # diff against the merge base. Other events keep the shallow clone.
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
+
+      - name: Reproducible build check (PHP 8.4 job only)
+        # Builds the release ZIPs twice into separate temp dirs and requires
+        # identical SHA256SUMS.txt, then runs the build/ unit tests. Runs once
+        # (one matrix leg) because the build does not depend on PHP. ZIP dates
+        # come from the HEAD commit time (see build/build_release.py).
+        if: matrix.php == '8.4'
+        run: |
+          set -euo pipefail
+          python3 build/build_release.py --dist-dir "$RUNNER_TEMP/wendfold-a/dist" --staging-dir "$RUNNER_TEMP/wendfold-a/staging" --check
+          python3 build/build_release.py --dist-dir "$RUNNER_TEMP/wendfold-b/dist" --staging-dir "$RUNNER_TEMP/wendfold-b/staging" --check
+          cmp "$RUNNER_TEMP/wendfold-a/dist/SHA256SUMS.txt" "$RUNNER_TEMP/wendfold-b/dist/SHA256SUMS.txt"
+          python3 -m unittest discover -s build -p 'test_*.py'
+          echo "Reproducible build check OK: two builds produced identical SHA256SUMS.txt"
+
+      - name: Brand guard (legacy product names)
+        # Fails the build if a legacy product name appears in any tracked text
+        # file. git grep skips untracked and git-ignored files (vendor/).
+        # Matching is case-insensitive and a term must not touch a letter or
+        # digit on either side, so longer words that merely contain it pass.
+        # Each letter is written as a one-character class, so this file never
+        # holds the names literally and the pattern cannot match its own line.
+        # On a hit only file:line is printed, never the matched text.
+        run: |
+          set -euo pipefail
+          a='[h][o][g]'
+          b='[h][a][r][l][e][y]'
+          PATTERN="(^|[^[:alnum:]])(${a}(command)?|${b}(davidson)?|[h][.][o][.][g])([^[:alnum:]]|$)"
+          rc=0
+          locs="$(git grep -n -I -i -E -e "$PATTERN" -- . | cut -d: -f1,2; exit "${PIPESTATUS[0]}")" || rc=$?
+          if [ "$rc" -gt 1 ]; then
+            echo "::error::brand guard: git grep failed (exit $rc)"
+            exit "$rc"
+          fi
+          if [ -n "$locs" ]; then
+            while IFS= read -r loc; do
+              echo "::error file=${loc%%:*},line=${loc##*:}::legacy product name found"
+              echo "$loc"
+            done <<< "$locs"
+            exit 1
+          fi
+          echo "Brand guard: no legacy product names in $(git ls-files | wc -l) tracked files"
+
+      - name: Set up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, simplexml, xml, zip
+          coverage: none
+          tools: composer:${{ env.COMPOSER_VERSION }}
+        env:
+          # setup-php reads "update" from the environment (it is not an input
+          # in action.yml): update the runner's PHP to the latest patch.
+          update: true
+
+      - name: PHP security floor
+        env:
+          EXPECTED_MINOR: ${{ matrix.php }}
+        run: |
+          set -euo pipefail
+          php -v
+          # Quoted heredoc: the shell never expands the PHP snippet.
+          read -r -d '' FLOOR_CHECK <<'PHP' || true
+          $floors = [
+              '8.2' => '8.2.35',
+              '8.3' => '8.3.36',
+              '8.4' => '8.4.27',
+              '8.5' => '8.5.12',
+          ];
+          $minor = PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION;
+          $expected = getenv('EXPECTED_MINOR');
+          if ($minor !== $expected) {
+              fwrite(STDERR, "::error::PHP {$minor} is active but the matrix asked for {$expected}\n");
+              exit(1);
+          }
+          if (!isset($floors[$minor])) {
+              fwrite(STDERR, "::error::No security floor for PHP {$minor}; add one to ci.yml\n");
+              exit(1);
+          }
+          if (version_compare(PHP_VERSION, $floors[$minor], '<')) {
+              fwrite(STDERR, "::error::PHP " . PHP_VERSION . " is below the security floor {$floors[$minor]} (CVE-2026-109618, CVE-2026-109619)\n");
+              exit(1);
+          }
+          echo "PHP " . PHP_VERSION . " meets the security floor {$floors[$minor]}\n";
+          PHP
+          php -r "$FLOOR_CHECK"
+
+      - name: Install dev tools (composer.lock)
+        # Installs the pinned PHP_CodeSniffer, joomla/coding-standards, PHPUnit
+        # and PHPStan into vendor/. vendor/ is git-ignored and never part of
+        # the release ZIPs.
+        run: |
+          composer validate --strict
+          composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Tool versions
+        run: |
+          php -v
+          composer --version
+          vendor/bin/phpcs --version
+          vendor/bin/phpunit --version
+          vendor/bin/phpstan --version
+          python3 --version
+
+      - name: PHP lint (php -l on every PHP file)
+        run: |
+          set -euo pipefail
+          count=0; failed=0
+          while IFS= read -r -d '' f; do
+            count=$((count + 1))
+            if ! out=$(php -d display_errors=1 -l "$f" 2>&1); then
+              failed=$((failed + 1))
+              echo "::error file=${f}::${out//$'\n'/ }"
+            fi
+          done < <(git ls-files -z -- '*.php')
+          echo "Linted ${count} PHP files with PHP $(php -r 'echo PHP_VERSION;'): ${failed} with syntax errors"
+          test "$count" -gt 0
+          test "$failed" -eq 0
+
+      - name: PHPUnit
+        # tests/ suite from phpunit.xml.dist; fails on any failing test,
+        # warning or deprecation.
+        run: vendor/bin/phpunit --configuration phpunit.xml.dist
+
+      - name: Fetch Joomla ${{ env.JOOMLA_VERSION }} for PHPStan
+        # Unpacked outside the checkout; phpstan/bootstrap.php reads JOOMLA_ROOT.
+        run: |
+          set -euo pipefail
+          zip="${RUNNER_TEMP}/joomla.zip"
+          dest="${RUNNER_TEMP}/joomla-${JOOMLA_VERSION}"
+          curl -fsSL --retry 3 -o "$zip" \
+            "https://github.com/joomla/joomla-cms/releases/download/${JOOMLA_VERSION}/Joomla_${JOOMLA_VERSION}-Stable-Full_Package.zip"
+          echo "${JOOMLA_SHA256}  ${zip}" | sha256sum -c --strict
+          mkdir -p "$dest"
+          unzip -q "$zip" -d "$dest"
+          test -f "$dest/includes/defines.php"
+          echo "JOOMLA_ROOT=$dest" >> "$GITHUB_ENV"
+
+      - name: PHPStan (level 5, new findings only)
+        # phpstan-baseline.neon holds the existing findings. A new finding fails
+        # the job, and so does a baselined one that no longer occurs
+        # (reportUnmatchedIgnoredErrors), so the baseline only shrinks.
+        run: |
+          vendor/bin/phpstan analyse -c phpstan.neon.dist --no-progress --error-format=github --memory-limit=1G
+          echo "PHPStan OK"
+
+      - name: PHPCS on PHP files changed by this PR (blocking)
+        # Pull requests only. Checks every PHP file the PR adds, copies,
+        # modifies or renames (new path) against phpcs.xml.dist and fails on any
+        # error. Deleted files are skipped; files the PR does not touch are not
+        # checked. Warnings are reported but do not fail the step, matching the
+        # tree after the phpcbf pass (#155), which leaves only line-length
+        # warnings that phpcbf cannot fix.
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          git rev-parse --verify --quiet "${BASE_SHA}^{commit}" >/dev/null \
+            || { echo "::error::PR base ${BASE_SHA} is not in the clone (fetch-depth)"; exit 1; }
+          files=()
+          while IFS= read -r -d '' f; do
+            files+=("./${f}")
+          done < <(git diff -z --name-only --no-renames --diff-filter=ACMR "${BASE_SHA}...HEAD" -- \
+                     '*.php' ':(exclude,glob)**/tmpl/**' ':(exclude)vendor/')
+          if [[ ${#files[@]} -eq 0 ]]; then
+            echo "No PHP files changed outside */tmpl/* and vendor/: nothing to check."
+            exit 0
+          fi
+          echo "Checking ${#files[@]} changed PHP file(s) against the PR base:"
+          printf '  %s\n' "${files[@]}"
+          vendor/bin/phpcs --standard=phpcs.xml.dist \
+            --report=full --report-summary \
+            --runtime-set ignore_warnings_on_exit 1 \
+            -- "${files[@]}"
+
+      - name: PHPCS (report-only for now)
+        # Report-only: ignore_errors_on_exit / ignore_warnings_on_exit keep the
+        # exit code 0 while printing every finding. Remove both --runtime-set
+        # flags once the tree is clean so new violations fail CI.
+        run: |
+          vendor/bin/phpcs --standard=phpcs.xml.dist \
+            --report=summary --report-source --report-full \
+            --runtime-set ignore_errors_on_exit 1 \
+            --runtime-set ignore_warnings_on_exit 1
+
+      - name: XML well-formedness (manifests, forms, update XML)
+        run: |
+          set -euo pipefail
+          # PHP snippets live in quoted heredocs so the shell never expands them.
+          read -r -d '' CHECK_XML <<'PHP' || true
+          libxml_use_internal_errors(true);
+          $d = new DOMDocument();
+          if (!$d->load($argv[1], LIBXML_NONET)) {
+              foreach (libxml_get_errors() as $e) {
+                  fwrite(STDERR, sprintf("%s:%d: %s\n", $argv[1], $e->line, trim($e->message)));
+              }
+              exit(1);
+          }
+          PHP
+          read -r -d '' GET_VERSION <<'PHP' || true
+          $x = simplexml_load_file($argv[1]);
+          echo trim((string) $x->version);
+          PHP
+          count=0; failed=0
+          while IFS= read -r -d '' f; do
+            count=$((count + 1))
+            if ! php -r "$CHECK_XML" "$f"; then
+              failed=$((failed + 1))
+              echo "::error file=${f}::Malformed XML"
+            fi
+          done < <(git ls-files -z -- '*.xml' '*.xml.dist')
+          echo "Checked ${count} XML files: ${failed} malformed"
+          test "$failed" -eq 0
+          # The five extension manifests must exist and have a <version>.
+          for m in pkg_wendfold/pkg_wendfold.xml com_wendfold/wendfold.xml \
+                   plg_user_wendfold/wendfold.xml plg_task_wendfold/wendfold.xml \
+                   plg_privacy_wendfold/wendfold.xml; do
+            v=$(php -r "$GET_VERSION" "$m")
+            test -n "$v" || { echo "::error file=${m}::missing <version>"; exit 1; }
+            echo "${m}: version ${v}"
+          done
+
+      - name: Build release ZIPs
+        run: python3 build/build_release.py
+
+      - name: Verify SHA256SUMS
+        working-directory: build/dist
+        run: |
+          ls -l
+          sha256sum -c --strict SHA256SUMS.txt
+
+      - name: Check ZIP layout (manifest and LICENSE.txt at ZIP root)
+        working-directory: build/dist
+        run: |
+          set -euo pipefail
+          check() { # zip, required root entries...
+            local z="$1"; shift
+            local listing
+            listing="$(unzip -Z1 "$z")"   # capture first: grep -q on a pipe + pipefail = SIGPIPE
+            for entry in "$@"; do
+              grep -qxF "$entry" <<< "$listing" || { echo "::error::$z is missing $entry at ZIP root"; exit 1; }
+            done
+            echo "$z: OK ($*)"
+          }
+          check com_wendfold_v*.zip      wendfold.xml LICENSE.txt
+          check plg_user_wendfold_v*.zip wendfold.xml LICENSE.txt
+          check plg_task_wendfold_v*.zip wendfold.xml LICENSE.txt
+          check plg_privacy_wendfold_v*.zip wendfold.xml LICENSE.txt
+          check pkg_wendfold_v*.zip      pkg_wendfold.xml LICENSE.txt
+          unzip -Z1 pkg_wendfold_v*.zip | grep -E '^constituents/.+\.zip$'
+          # Every child ZIP built standalone must also ship inside the package.
+          pkg_listing="$(unzip -Z1 pkg_wendfold_v*.zip)"
+          for child in com_wendfold plg_user_wendfold plg_task_wendfold plg_privacy_wendfold; do
+            z=$(ls ${child}_v*.zip)
+            grep -qxF "constituents/${z}" <<< "$pkg_listing" \
+              || { echo "::error::pkg_wendfold ZIP is missing constituents/${z}"; exit 1; }
+            echo "constituents/${z}: OK"
+          done
+
+      - name: Upload build artifact
+        if: matrix.php == '8.4'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: wendfold-dist-${{ github.sha }}
+          path: |
+            build/dist/*.zip
+            build/dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  schema:
+    # Loads the install SQL, applies every update SQL file (twice, to prove
+    # re-run safety), diffs information_schema columns and indexes of that
+    # database against a fresh install, and runs the uninstall SQL, on
+    # MariaDB 11.8 and MySQL 8.4 (scripts/ci/schema-check.sh). Images are
+    # pinned by digest: mariadb:11.8 and mysql:8.4 as of 2026-10-28.
+    name: Schema
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    services:
+      mariadb:
+        image: mariadb:11.8@sha256:c4124d1afa875e47f2892edf26b482fa54f796e2f342d3717a04ca091a22a9bd
+        env:
+          MARIADB_ROOT_PASSWORD: schema
+          MARIADB_DATABASE: wendfold
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+      mysql:
+        image: mysql:8.4@sha256:a0225d1ea6631c8bc2385dc4c2faba17bbf1834ecf369e1659a9a382bd8d5dd7
+        env:
+          MYSQL_ROOT_PASSWORD: schema
+          MYSQL_DATABASE: wendfold
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pschema"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Tools (mysql client, php, python3)
+        run: |
+          set -euo pipefail
+          command -v mysql >/dev/null || { sudo apt-get update && sudo apt-get install -y mariadb-client; }
+          mysql --version
+          php -v
+          python3 --version
+
+      - name: Schema checks
+        run: |
+          SCHEMA_SERVERS='127.0.0.1:3306:root:schema 127.0.0.1:3307:root:schema' \
+            bash scripts/ci/schema-check.sh

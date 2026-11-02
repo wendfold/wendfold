@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade">
+
+    <name>Wendfold</name>
+    <creationDate>2026-11-02</creationDate>
+    <author>Adan Lozano</author>
+    <authorEmail>support@wendfold.com</authorEmail>
+    <authorUrl>https://wendfold.com</authorUrl>
+    <copyright>Copyright (C) 2026 Adan Lozano</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>1.0.0</version>
+    <description>Chapter management for clubs, chapters, and member organizations: members, officers, dues, events, attendance, activities, trips, volunteer staffing, and reports.</description>
+    <element>com_wendfold</element>
+
+    <namespace path="src">Wendfold\Component\Wendfold</namespace>
+
+    <!-- Front-end (site) files -->
+    <files folder="site">
+        <folder>services</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+    </files>
+
+    <!-- Front-end language files copied to /language/<tag>/ -->
+    <languages folder="language">
+        <language tag="en-GB">en-GB/com_wendfold.ini</language>
+    </languages>
+
+    <!-- Back-end (administrator) files -->
+    <administration>
+        <!--
+            img replaces the default class:component placeholder.
+            menu_image shows the white mark beside "Wendfold" under Components
+            (Atum only paints img/class icons on level-1 items).
+        -->
+        <menu view="members" img="class:wendfold">
+            COM_WENDFOLD
+            <params>
+                <menu_image>media/com_wendfold/images/wendfold-mark-24-white.png</menu_image>
+            </params>
+        </menu>
+
+        <submenu>
+            <menu link="option=com_wendfold&amp;view=members" img="class:icon-users">COM_WENDFOLD_SUBMENU_MEMBERS</menu>
+            <menu link="option=com_wendfold&amp;view=events" img="class:icon-calendar">COM_WENDFOLD_SUBMENU_EVENTS</menu>
+            <menu link="option=com_wendfold&amp;view=locations" img="class:fa-solid fa-map">COM_WENDFOLD_SUBMENU_LOCATIONS</menu>
+            <menu link="option=com_wendfold&amp;view=metricdefinitions" img="class:icon-chart">COM_WENDFOLD_SUBMENU_METRICS</menu>
+            <menu link="option=com_wendfold&amp;view=awarddefinitions" img="class:icon-star">COM_WENDFOLD_SUBMENU_AWARDS</menu>
+            <menu link="option=com_wendfold&amp;view=activities" img="class:icon-list">COM_WENDFOLD_SUBMENU_ACTIVITIES</menu>
+            <menu link="option=com_wendfold&amp;view=stats" img="class:icon-chart-bar">COM_WENDFOLD_MENU_STATS</menu>
+            <menu link="option=com_wendfold&amp;view=dues" img="class:fa-solid fa-credit-card">COM_WENDFOLD_SUBMENU_DUES</menu>
+            <menu link="option=com_wendfold&amp;view=officers" img="class:icon-user">COM_WENDFOLD_SUBMENU_OFFICERS</menu>
+            <menu link="option=com_wendfold&amp;view=officerroles" img="class:icon-user">COM_WENDFOLD_SUBMENU_OFFICER_ROLES</menu>
+            <menu link="option=com_wendfold&amp;view=eventtypes" img="class:icon-calendar">COM_WENDFOLD_SUBMENU_EVENT_TYPES</menu>
+            <menu link="option=com_wendfold&amp;view=membershiptypes" img="class:icon-users">COM_WENDFOLD_SUBMENU_MEMBERSHIP_TYPES</menu>
+            <menu link="option=com_wendfold&amp;view=sync" img="class:icon-refresh">COM_WENDFOLD_SUBMENU_SYNC</menu>
+            <menu link="option=com_wendfold&amp;view=emailblast" img="class:icon-envelope">COM_WENDFOLD_SUBMENU_EMAILBLAST</menu>
+        </submenu>
+
+        <languages folder="admin/language">
+            <language tag="en-GB">en-GB/com_wendfold.ini</language>
+            <language tag="en-GB">en-GB/com_wendfold.sys.ini</language>
+        </languages>
+
+        <files folder="admin">
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <folder>forms</folder>
+            <folder>language</folder>
+            <folder>services</folder>
+            <folder>src</folder>
+            <folder>sql</folder>
+            <folder>tmpl</folder>
+            <folder>vendor</folder>
+        </files>
+    </administration>
+
+    <!-- Media assets -->
+    <media destination="com_wendfold" folder="media">
+        <filename>joomla.asset.json</filename>
+        <folder>css</folder>
+        <folder>images</folder>
+        <folder>js</folder>
+        <folder>vendor</folder>
+    </media>
+
+    <!-- Installer script -->
+    <scriptfile>script.php</scriptfile>
+
+    <!-- SQL: install/update/uninstall -->
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/install.mysql.utf8.sql</file>
+        </sql>
+    </install>
+
+    <update>
+        <schemas>
+            <schemapath type="mysql">sql/updates/mysql</schemapath>
+        </schemas>
+    </update>
+
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">sql/uninstall.mysql.utf8.sql</file>
+        </sql>
+    </uninstall>
+</extension>

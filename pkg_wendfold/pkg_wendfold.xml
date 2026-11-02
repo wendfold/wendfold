@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" method="upgrade">
+    <name>PKG_WENDFOLD</name>
+    <packagename>wendfold</packagename>
+    <version>1.0.0</version>
+    <creationDate>2026-11-02</creationDate>
+    <author>Adan Lozano</author>
+    <authorEmail>support@wendfold.com</authorEmail>
+    <authorUrl>https://wendfold.com</authorUrl>
+    <packager>Adan Lozano</packager>
+    <packagerurl>https://wendfold.com</packagerurl>
+    <copyright>Copyright (C) 2026 Adan Lozano</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <description>PKG_WENDFOLD_XML_DESCRIPTION</description>
+    <changelogurl>https://wendfold.com/updates/changelog.xml</changelogurl>
+    <scriptfile>script.php</scriptfile>
+    <blockChildUninstall>true</blockChildUninstall>
+    <updateservers>
+        <server type="extension" priority="1" name="Wendfold">https://wendfold.com/updates/pkg_wendfold.xml</server>
+    </updateservers>
+
+    <files folder="constituents">
+        <file type="component" id="com_wendfold">com_wendfold_v1.0.0.zip</file>
+        <file type="plugin" id="wendfold" group="user">plg_user_wendfold_v1.0.0.zip</file>
+        <file type="plugin" id="wendfold" group="task">plg_task_wendfold_v1.0.0.zip</file>
+        <file type="plugin" id="wendfold" group="privacy">plg_privacy_wendfold_v1.0.0.zip</file>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/pkg_wendfold.sys.ini</language>
+    </languages>
+</extension>

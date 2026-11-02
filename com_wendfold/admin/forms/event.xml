@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<!--
+    Wendfold - Event Edit Form
+    admin/forms/event.xml
+
+    The alias is stored on #__wendfold_events and generated in EventTable::check()
+    when the field is left blank.
+
+    Language keys: all labels verified against admin/language/en-GB/com_wendfold.ini
+    before every edit. Do NOT invent new keys without adding them.
+-->
+<form>
+
+    <fieldset name="details" label="COM_WENDFOLD_FIELDSET_DETAILS">
+
+        <field name="title"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TITLE_LABEL"
+               description="COM_WENDFOLD_FIELD_TITLE_DESC"
+               size="50"
+               maxlength="255"
+               required="true"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_TITLE_HINT" />
+
+        <field name="alias"
+               type="text"
+               label="COM_WENDFOLD_FIELD_ALIAS_LABEL"
+               description="COM_WENDFOLD_FIELD_ALIAS_DESC"
+               hint="COM_WENDFOLD_FIELD_ALIAS_HINT"
+               size="40"
+               maxlength="400"
+               filter="string" />
+
+        <field name="event_type_id"
+               type="lookup"
+               lookup="eventtype"
+               addfieldprefix="Wendfold\Component\Wendfold\Administrator\Field"
+               label="COM_WENDFOLD_FIELD_EVENT_TYPE_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_TYPE_DESC"
+               required="true"
+               filter="integer" />
+
+        <field name="is_riding_event"
+               type="radio"
+               label="COM_WENDFOLD_FIELD_SHOW_RIDE_FIELDS_LABEL"
+               description="COM_WENDFOLD_FIELD_SHOW_RIDE_FIELDS_DESC"
+               default="1"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="event_date"
+               type="calendar"
+               label="COM_WENDFOLD_FIELD_EVENT_DATE_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_DATE_DESC"
+               format="%Y-%m-%d"
+               filter="date"
+               required="true"
+               default="" />
+
+        <field name="ksu_time"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSU_TIME_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_TIME_DESC"
+               size="10"
+               maxlength="8"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_TIME_HINT" />
+
+        <field name="ksd_time"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSD_TIME_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_TIME_DESC"
+               size="10"
+               maxlength="8"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_TIME_HINT" />
+
+        <field name="status"
+               type="list"
+               label="COM_WENDFOLD_FIELD_EVENT_STATUS_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_STATUS_DESC"
+               default="1">
+            <option value="1">COM_WENDFOLD_EVENT_STATUS_SCHEDULED</option>
+            <option value="5">COM_WENDFOLD_EVENT_STATUS_WEATHER_WATCH</option>
+            <option value="4">COM_WENDFOLD_EVENT_STATUS_CONFIRMED</option>
+            <option value="3">COM_WENDFOLD_EVENT_STATUS_CANCELLED</option>
+            <option value="2">COM_WENDFOLD_EVENT_STATUS_COMPLETED</option>
+        </field>
+
+        <field name="published"
+               type="list"
+               label="JSTATUS"
+               description="JFIELD_PUBLISHED_DESC"
+               default="1"
+               validate="options">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+            <option value="2">JARCHIVED</option>
+            <option value="-2">JTRASHED</option>
+        </field>
+
+        <field name="description"
+               type="editor"
+               label="COM_WENDFOLD_FIELD_DESCRIPTION_LABEL"
+               description="COM_WENDFOLD_FIELD_DESCRIPTION_DESC"
+               filter="\Joomla\CMS\Component\ComponentHelper::filterText"
+               buttons="true"
+               hide="readmore,pagebreak"
+               hint="COM_WENDFOLD_FIELD_DESCRIPTION_HINT" />
+
+    </fieldset>
+
+    <fieldset name="workflow" label="COM_WENDFOLD_FIELDSET_WORKFLOW">
+
+        <field name="workflow_mode"
+               type="list"
+               label="COM_WENDFOLD_FIELD_WORKFLOW_MODE_LABEL"
+               description="COM_WENDFOLD_FIELD_WORKFLOW_MODE_DESC"
+               validate="options"
+               default="1">
+            <option value="1">COM_WENDFOLD_WORKFLOW_STANDARD_RSVP</option>
+            <option value="2">COM_WENDFOLD_WORKFLOW_RIDE_OPS</option>
+            <option value="3">COM_WENDFOLD_WORKFLOW_MEETING_ROLLCALL</option>
+            <option value="4">COM_WENDFOLD_WORKFLOW_VOLUNTEER</option>
+            <option value="5">COM_WENDFOLD_WORKFLOW_OVERNIGHT</option>
+        </field>
+
+        <!-- Value 2 is a signed-in user with a published member profile. -->
+        <field name="audience_scope"
+               type="list"
+               label="COM_WENDFOLD_FIELD_AUDIENCE_SCOPE_LABEL"
+               description="COM_WENDFOLD_FIELD_AUDIENCE_SCOPE_DESC"
+               validate="options"
+               default="1">
+            <option value="1">COM_WENDFOLD_AUDIENCE_ALL_VISITORS</option>
+            <option value="2">COM_WENDFOLD_AUDIENCE_MEMBERS</option>
+            <option value="3">COM_WENDFOLD_AUDIENCE_OFFICERS</option>
+            <option value="4">COM_WENDFOLD_AUDIENCE_ROAD_CAPTAINS</option>
+        </field>
+
+        <field name="allow_rsvp"
+               type="radio"
+               label="COM_WENDFOLD_FIELD_ALLOW_RSVP_LABEL"
+               description="COM_WENDFOLD_FIELD_ALLOW_RSVP_DESC"
+               validate="options"
+               default="1"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="parent_event_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_PARENT_EVENT_LABEL"
+               description="COM_WENDFOLD_FIELD_PARENT_EVENT_DESC"
+               query="SELECT e.id AS value, CONCAT(e.title, ' - ', e.event_date) AS text FROM #__wendfold_events AS e INNER JOIN #__wendfold_event_types AS t ON t.id = e.event_type_id WHERE e.published = 1 AND t.behavior = 3 ORDER BY e.event_date DESC, e.title ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_PARENT_EVENT_NONE" />
+
+        <field name="show_in_event_list"
+               type="radio"
+               label="COM_WENDFOLD_FIELD_SHOW_IN_EVENT_LIST_LABEL"
+               description="COM_WENDFOLD_FIELD_SHOW_IN_EVENT_LIST_DESC"
+               default="1"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="start_date"
+               type="calendar"
+               label="COM_WENDFOLD_FIELD_START_DATE_LABEL"
+               description="COM_WENDFOLD_FIELD_START_DATE_DESC"
+               format="%Y-%m-%d"
+               filter="date"
+ />
+
+        <field name="end_date"
+               type="calendar"
+               label="COM_WENDFOLD_FIELD_END_DATE_LABEL"
+               description="COM_WENDFOLD_FIELD_END_DATE_DESC"
+               format="%Y-%m-%d"
+               filter="date"
+ />
+
+        <field name="trip_lead_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_TRIP_LEAD_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LEAD_DESC"
+               query="SELECT DISTINCT p.id AS value, u.name AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id LEFT JOIN #__wendfold_officers AS o ON o.profile_id = p.id AND o.is_current = 1 AND o.published = 1 LEFT JOIN #__wendfold_officer_roles AS r ON r.id = o.role_id AND r.system_key = 'head_road_captain' WHERE p.published = 1 AND (p.is_road_captain = 1 OR r.id IS NOT NULL) ORDER BY u.name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_TRIP_LEAD_NONE"
+ />
+
+        <field name="trip_sweep_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_TRIP_SWEEP_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_SWEEP_DESC"
+               query="SELECT DISTINCT p.id AS value, u.name AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id LEFT JOIN #__wendfold_officers AS o ON o.profile_id = p.id AND o.is_current = 1 AND o.published = 1 LEFT JOIN #__wendfold_officer_roles AS r ON r.id = o.role_id AND r.system_key = 'head_road_captain' WHERE p.published = 1 AND (p.is_road_captain = 1 OR r.id IS NOT NULL) ORDER BY u.name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_TRIP_SWEEP_NONE"
+ />
+
+        <field name="trip_booking_deadline"
+               type="calendar"
+               label="COM_WENDFOLD_FIELD_TRIP_BOOKING_DEADLINE_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_BOOKING_DEADLINE_DESC"
+               format="%Y-%m-%d"
+               filter="date"
+ />
+
+        <field name="trip_booking_method"
+               type="list"
+               label="COM_WENDFOLD_FIELD_TRIP_BOOKING_METHOD_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_BOOKING_METHOD_DESC"
+               default=""
+>
+            <option value="">COM_WENDFOLD_FIELD_TRIP_BOOKING_METHOD_NONE</option>
+            <option value="online">COM_WENDFOLD_TRIP_BOOKING_METHOD_ONLINE</option>
+            <option value="phone">COM_WENDFOLD_TRIP_BOOKING_METHOD_PHONE</option>
+            <option value="group_block">COM_WENDFOLD_TRIP_BOOKING_METHOD_GROUP_BLOCK</option>
+            <option value="manual">COM_WENDFOLD_TRIP_BOOKING_METHOD_MANUAL</option>
+        </field>
+
+        <field name="trip_booking_code"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_BOOKING_CODE_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_BOOKING_CODE_DESC"
+               size="30"
+               maxlength="60"
+               filter="string"
+ />
+
+        <field name="trip_lodging_name"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_NAME_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_NAME_DESC"
+               size="50"
+               maxlength="255"
+               filter="string"
+ />
+
+        <field name="trip_lodging_phone"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_PHONE_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_PHONE_DESC"
+               size="20"
+               maxlength="40"
+               filter="string"
+ />
+
+        <field name="trip_lodging_address"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_ADDRESS_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_ADDRESS_DESC"
+               size="50"
+               maxlength="255"
+               filter="string"
+ />
+
+        <field name="trip_lodging_city"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_CITY_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_CITY_DESC"
+               size="30"
+               maxlength="100"
+               filter="string"
+ />
+
+        <field name="trip_lodging_state"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_STATE_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_STATE_DESC"
+               size="3"
+               maxlength="2"
+               filter="string"
+ />
+
+        <field name="trip_lodging_zip"
+               type="text"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_ZIP_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_ZIP_DESC"
+               size="10"
+               maxlength="10"
+               filter="string"
+ />
+
+        <field name="trip_lodging_notes"
+               type="textarea"
+               label="COM_WENDFOLD_FIELD_TRIP_LODGING_NOTES_LABEL"
+               description="COM_WENDFOLD_FIELD_TRIP_LODGING_NOTES_DESC"
+               rows="5"
+               cols="40"
+               filter="string"
+ />
+
+        <field name="volunteer_signup_open"
+               type="radio"
+               label="COM_WENDFOLD_FIELD_VOLUNTEER_SIGNUP_OPEN_LABEL"
+               description="COM_WENDFOLD_FIELD_VOLUNTEER_SIGNUP_OPEN_DESC"
+               default="1"
+               layout="joomla.form.field.radio.switcher">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="volunteer_notes"
+               type="textarea"
+               label="COM_WENDFOLD_FIELD_VOLUNTEER_NOTES_LABEL"
+               description="COM_WENDFOLD_FIELD_VOLUNTEER_NOTES_DESC"
+               rows="4"
+               cols="40"
+               filter="string" />
+
+        <field name="volunteer_manager_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_VOLUNTEER_MANAGER_LABEL"
+               description="COM_WENDFOLD_FIELD_VOLUNTEER_MANAGER_DESC"
+               query="SELECT p.id AS value, CONCAT(u.name, ' (', p.member_number, ')') AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id WHERE p.published = 1 ORDER BY u.name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_VOLUNTEER_MANAGER_NONE" />
+
+        <field name="volunteer_backup_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_VOLUNTEER_BACKUP_LABEL"
+               description="COM_WENDFOLD_FIELD_VOLUNTEER_BACKUP_DESC"
+               query="SELECT p.id AS value, CONCAT(u.name, ' (', p.member_number, ')') AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id WHERE p.published = 1 ORDER BY u.name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_VOLUNTEER_BACKUP_NONE" />
+
+        <field name="volunteer_roles"
+               type="subform"
+               label="COM_WENDFOLD_FIELD_VOLUNTEER_ROLES_LABEL"
+               description="COM_WENDFOLD_FIELD_VOLUNTEER_ROLES_DESC"
+               multiple="true"
+               formsource="administrator/components/com_wendfold/forms/volunteerrole.xml"
+               buttons="add,remove,move"
+               layout="joomla.form.field.subform.repeatable-table" />
+
+    </fieldset>
+
+    <fieldset name="locations" label="COM_WENDFOLD_FIELDSET_LOCATIONS">
+
+        <!--
+            Saved locations can be used as KSU, KSD, or event venue.
+            location_type: 1=Chapter Stop, 2=Event Venue, 3=Both
+            KSU/KSD show type IN (1,3)
+            Event venue shows type IN (2,3)
+        -->
+
+        <field name="ksu_location_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_KSU_LOCATION_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_LOCATION_DESC"
+               query="SELECT id AS value, CONCAT(name, ' - ', city, ', ', state, IF(zip != '', CONCAT(' ', zip), '')) AS text FROM #__wendfold_locations WHERE published = 1 AND location_type IN (1,3) ORDER BY name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_LOCATION_SELECT">
+            <option value="-1">COM_WENDFOLD_FIELD_LOCATION_CUSTOM</option>
+        </field>
+
+        <field name="ksu_location_custom"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSU_CUSTOM_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_CUSTOM_DESC"
+               size="50"
+               maxlength="255"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_LOCATION_CUSTOM_HINT" />
+
+        <field name="ksu_address"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSU_ADDRESS_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_ADDRESS_DESC"
+               size="50"
+               maxlength="255"
+               filter="string" />
+
+        <field name="ksu_city"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSU_CITY_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_CITY_DESC"
+               size="30"
+               maxlength="100"
+               filter="string" />
+
+        <field name="ksu_state"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSU_STATE_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_STATE_DESC"
+               size="3"
+               maxlength="2"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_STATE_HINT" />
+
+        <field name="ksu_zip"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSU_ZIP_LABEL"
+               description="COM_WENDFOLD_FIELD_KSU_ZIP_DESC"
+               size="10"
+               maxlength="10"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_ZIP_HINT" />
+
+        <field name="ksd_location_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_KSD_LOCATION_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_LOCATION_DESC"
+               query="SELECT id AS value, CONCAT(name, ' - ', city, ', ', state, IF(zip != '', CONCAT(' ', zip), '')) AS text FROM #__wendfold_locations WHERE published = 1 AND location_type IN (1,3) ORDER BY name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_LOCATION_SELECT">
+            <option value="-1">COM_WENDFOLD_FIELD_LOCATION_CUSTOM</option>
+        </field>
+
+        <field name="ksd_location_custom"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSD_CUSTOM_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_CUSTOM_DESC"
+               size="50"
+               maxlength="255"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_LOCATION_CUSTOM_HINT" />
+
+        <field name="ksd_address"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSD_ADDRESS_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_ADDRESS_DESC"
+               size="50"
+               maxlength="255"
+               filter="string" />
+
+        <field name="ksd_city"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSD_CITY_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_CITY_DESC"
+               size="30"
+               maxlength="100"
+               filter="string" />
+
+        <field name="ksd_state"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSD_STATE_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_STATE_DESC"
+               size="3"
+               maxlength="2"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_STATE_HINT" />
+
+        <field name="ksd_zip"
+               type="text"
+               label="COM_WENDFOLD_FIELD_KSD_ZIP_LABEL"
+               description="COM_WENDFOLD_FIELD_KSD_ZIP_DESC"
+               size="10"
+               maxlength="10"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_ZIP_HINT" />
+
+        <field name="event_location_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_EVENT_LOCATION_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_LOCATION_DESC"
+               query="SELECT id AS value, CONCAT(name, ' - ', city, ', ', state, IF(zip != '', CONCAT(' ', zip), '')) AS text FROM #__wendfold_locations WHERE published = 1 AND location_type IN (2,3) ORDER BY name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_LOCATION_SELECT">
+            <option value="-1">COM_WENDFOLD_FIELD_LOCATION_CUSTOM</option>
+        </field>
+
+        <field name="event_location_custom"
+               type="text"
+               label="COM_WENDFOLD_FIELD_EVENT_LOCATION_CUSTOM_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_LOCATION_CUSTOM_DESC"
+               size="50"
+               maxlength="255"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_LOCATION_CUSTOM_HINT" />
+
+        <field name="event_address"
+               type="text"
+               label="COM_WENDFOLD_FIELD_EVENT_ADDRESS_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_ADDRESS_DESC"
+               size="50"
+               maxlength="255"
+               filter="string" />
+
+        <field name="event_city"
+               type="text"
+               label="COM_WENDFOLD_FIELD_EVENT_CITY_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_CITY_DESC"
+               size="30"
+               maxlength="100"
+               filter="string" />
+
+        <field name="event_state"
+               type="text"
+               label="COM_WENDFOLD_FIELD_EVENT_STATE_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_STATE_DESC"
+               size="3"
+               maxlength="2"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_STATE_HINT" />
+
+        <field name="event_zip"
+               type="text"
+               label="COM_WENDFOLD_FIELD_EVENT_ZIP_LABEL"
+               description="COM_WENDFOLD_FIELD_EVENT_ZIP_DESC"
+               size="10"
+               maxlength="10"
+               filter="string"
+               hint="COM_WENDFOLD_FIELD_ZIP_HINT" />
+
+    </fieldset>
+
+    <fieldset name="ride" label="COM_WENDFOLD_FIELDSET_RIDE">
+
+        <field name="image"
+               type="media"
+               label="COM_WENDFOLD_FIELD_IMAGE_LABEL"
+               description="COM_WENDFOLD_FIELD_IMAGE_DESC"
+               directory="wendfold/locations"
+               filter="raw" />
+
+        <field name="route_link"
+               type="url"
+               label="COM_WENDFOLD_FIELD_ROUTE_LINK_LABEL"
+               description="COM_WENDFOLD_FIELD_ROUTE_LINK_DESC"
+               size="80"
+               maxlength="2048"
+               filter="url"
+               hint="COM_WENDFOLD_FIELD_ROUTE_LINK_HINT" />
+
+        <field name="road_captain_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_ROAD_CAPTAIN_LABEL"
+               description="COM_WENDFOLD_FIELD_ROAD_CAPTAIN_DESC"
+               query="SELECT DISTINCT p.id AS value, u.name AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id LEFT JOIN #__wendfold_officers AS o ON o.profile_id = p.id AND o.is_current = 1 AND o.published = 1 LEFT JOIN #__wendfold_officer_roles AS r ON r.id = o.role_id AND r.system_key = 'head_road_captain' WHERE p.published = 1 AND (p.is_road_captain = 1 OR r.id IS NOT NULL) ORDER BY u.name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_ROAD_CAPTAIN_NONE" />
+
+        <field name="sweep_id"
+               type="sql"
+               label="COM_WENDFOLD_FIELD_SWEEP_LABEL"
+               description="COM_WENDFOLD_FIELD_SWEEP_DESC"
+               query="SELECT DISTINCT p.id AS value, u.name AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id LEFT JOIN #__wendfold_officers AS o ON o.profile_id = p.id AND o.is_current = 1 AND o.published = 1 LEFT JOIN #__wendfold_officer_roles AS r ON r.id = o.role_id AND r.system_key = 'head_road_captain' WHERE p.published = 1 AND (p.is_road_captain = 1 OR r.id IS NOT NULL) ORDER BY u.name ASC"
+               key_field="value"
+               value_field="text"
+               default=""
+               header="COM_WENDFOLD_FIELD_SWEEP_NONE" />
+
+        <field name="gpx_file"
+               type="file"
+               label="COM_WENDFOLD_FIELD_GPX_FILE_LABEL"
+               description="COM_WENDFOLD_FIELD_GPX_FILE_DESC"
+               accept=".gpx"
+               filter="raw" />
+
+        <field name="capacity"
+               type="number"
+               label="COM_WENDFOLD_FIELD_CAPACITY_LABEL"
+               description="COM_WENDFOLD_FIELD_CAPACITY_DESC"
+               min="0"
+               max="9999"
+               step="1"
+               filter="integer"
+               hint="COM_WENDFOLD_FIELD_CAPACITY_HINT" />
+
+    </fieldset>
+
+    <fieldset name="admin_notes" label="COM_WENDFOLD_FIELDSET_ADMIN_NOTES">
+        <field name="notes"
+               type="textarea"
+               label="COM_WENDFOLD_FIELD_NOTES_LABEL"
+               description="COM_WENDFOLD_FIELD_NOTES_DESC"
+               rows="6"
+               cols="40"
+               filter="string" />
+    </fieldset>
+
+    <fieldset name="hidden">
+        <field name="id" type="hidden" filter="integer" default="0" />
+    </fieldset>
+
+</form>

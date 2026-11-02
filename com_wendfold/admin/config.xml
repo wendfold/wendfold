@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<!--
+    Wendfold - Component Options (Global Configuration)
+    admin/config.xml
+
+    These parameters appear in the component Options panel:
+    Components -> Wendfold -> Options
+
+    Terminology params (the product name Wendfold itself is fixed):
+      group_name         - organization short name in visible labels (default "Chapter")
+      member_id_label    - label for the national membership number (default "Member Number")
+      national_org_label - name of the national or parent organization (default "National Organization")
+      chapter_label      - local unit word in headings (default "Chapter")
+
+    Defaults are neutral terminology. Saved values on existing installs
+    are unaffected after upgrade.
+
+    NOTE: The admin sidebar title ("Wendfold") and sys.ini strings cannot be
+    changed at runtime - they are loaded at bootstrap before any params are available.
+-->
+<config>
+
+    <!-- ============================================================
+         FIELDSET: Chapter Identity
+         Core settings that identify this chapter to the system.
+    ============================================================ -->
+    <fieldset
+        name="chapter"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_CHAPTER"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_CHAPTER_DESC"
+    >
+
+        <field
+            name="chapter_number"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_CHAPTER_NUMBER_LABEL"
+            description="COM_WENDFOLD_CONFIG_CHAPTER_NUMBER_DESC"
+            hint="COM_WENDFOLD_CONFIG_CHAPTER_NUMBER_HINT"
+            size="20"
+            maxlength="20"
+            default=""
+        />
+
+        <field
+            name="chapter_name"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_CHAPTER_NAME_LABEL"
+            description="COM_WENDFOLD_CONFIG_CHAPTER_NAME_DESC"
+            size="100"
+            maxlength="100"
+            default=""
+        />
+
+        <field
+            name="chapter_city"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_CHAPTER_CITY_LABEL"
+            description="COM_WENDFOLD_CONFIG_CHAPTER_CITY_DESC"
+            size="100"
+            maxlength="100"
+            default=""
+        />
+
+        <field
+            name="chapter_state"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_CHAPTER_STATE_LABEL"
+            description="COM_WENDFOLD_CONFIG_CHAPTER_STATE_DESC"
+            size="2"
+            maxlength="2"
+            default=""
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Terminology
+         Lets an organization replace visible words
+         without touching any PHP code.
+
+         Defaults are neutral terminology; saved values on existing installs
+         are unaffected after upgrade.
+
+         These params are read in views/templates via:
+           $params = ComponentHelper::getParams('com_wendfold');
+           $groupName = $params->get('group_name', 'Chapter');
+    ============================================================ -->
+    <fieldset
+        name="rebrand"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_REBRAND"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_REBRAND_DESC"
+    >
+
+        <field
+            name="group_name"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_GROUP_NAME_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_NAME_DESC"
+            hint="COM_WENDFOLD_CONFIG_GROUP_NAME_HINT"
+            size="50"
+            maxlength="50"
+            default="Chapter"
+            required="false"
+        />
+
+        <field
+            name="member_id_label"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_MEMBER_ID_LABEL_LABEL"
+            description="COM_WENDFOLD_CONFIG_MEMBER_ID_LABEL_DESC"
+            hint="COM_WENDFOLD_CONFIG_MEMBER_ID_LABEL_HINT"
+            size="50"
+            maxlength="50"
+            default="Member Number"
+            required="false"
+        />
+
+        <field
+            name="national_org_label"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_NATIONAL_ORG_LABEL_LABEL"
+            description="COM_WENDFOLD_CONFIG_NATIONAL_ORG_LABEL_DESC"
+            hint="COM_WENDFOLD_CONFIG_NATIONAL_ORG_LABEL_HINT"
+            size="50"
+            maxlength="50"
+            default="National Organization"
+            required="false"
+        />
+
+        <field
+            name="chapter_label"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_CHAPTER_LABEL_LABEL"
+            description="COM_WENDFOLD_CONFIG_CHAPTER_LABEL_DESC"
+            hint="COM_WENDFOLD_CONFIG_CHAPTER_LABEL_HINT"
+            size="50"
+            maxlength="50"
+            default="Chapter"
+            required="false"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: CSV Import
+         Maps roster fields to CSV header names. Stored in component
+         params (no schema change). Blank values fall back to the defaults
+         in CsvRosterParser::DEFAULT_COLUMNS.
+    ============================================================ -->
+    <fieldset
+        name="csvimport"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_CSV"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_CSV_DESC"
+    >
+
+        <field
+            name="csv_import_note"
+            type="note"
+            label="COM_WENDFOLD_CONFIG_CSV_NOTE_LABEL"
+            description="COM_WENDFOLD_CONFIG_CSV_NOTE_DESC"
+        />
+
+        <field
+            name="csv_col_member_id"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_MEMBER_ID"
+            description="COM_WENDFOLD_CONFIG_CSV_MEMBER_ID_DESC"
+            default="Member ID"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_first_name"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_FIRST_NAME"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="First Name"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_last_name"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_LAST_NAME"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Last Name"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_email"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_EMAIL"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Email"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_phone"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_PHONE"
+            description="COM_WENDFOLD_CONFIG_CSV_PHONE_DESC"
+            default="Phone"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_address"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_ADDRESS"
+            description="COM_WENDFOLD_CONFIG_CSV_ADDRESS_DESC"
+            default="Address"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_city"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_CITY"
+            description="COM_WENDFOLD_CONFIG_CSV_ADDRESS_DESC"
+            default="City"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_state"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_STATE"
+            description="COM_WENDFOLD_CONFIG_CSV_ADDRESS_DESC"
+            default="State"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_postal_code"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_POSTAL_CODE"
+            description="COM_WENDFOLD_CONFIG_CSV_ADDRESS_DESC"
+            default="Postal Code"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_country"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_COUNTRY"
+            description="COM_WENDFOLD_CONFIG_CSV_ADDRESS_DESC"
+            default="Country"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_join_date"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_JOIN_DATE"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Join Date"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_expiry_date"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_EXPIRY_DATE"
+            description="COM_WENDFOLD_CONFIG_CSV_EXPIRY_DESC"
+            default="Expiry Date"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_membership_type"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_MEMBERSHIP_TYPE"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Membership Type"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_life_member"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_LIFE_MEMBER"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Life Member"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_status"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_STATUS"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Status"
+            maxlength="80"
+            filter="string"
+        />
+
+        <field
+            name="csv_col_chapter"
+            type="text"
+            label="COM_WENDFOLD_CSV_COL_CHAPTER"
+            description="COM_WENDFOLD_CONFIG_CSV_HEADER_DESC"
+            default="Chapter"
+            maxlength="80"
+            filter="string"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: User groups
+         Install and update fill an empty id. A saved id is kept.
+         created_group_ids is written by the installer only.
+    ============================================================ -->
+    <fieldset
+        name="groups"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_GROUPS"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_GROUPS_DESC"
+    >
+
+        <field
+            name="group_member"
+            type="usergrouplist"
+            label="COM_WENDFOLD_CONFIG_GROUP_MEMBER_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_MEMBER_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_CONFIG_GROUP_USE_DEFAULT</option>
+        </field>
+
+        <field
+            name="group_road_captain"
+            type="usergrouplist"
+            label="COM_WENDFOLD_CONFIG_GROUP_ROAD_CAPTAIN_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_ROLE_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_CONFIG_GROUP_USE_DEFAULT</option>
+        </field>
+
+        <field
+            name="group_activities"
+            type="usergrouplist"
+            label="COM_WENDFOLD_CONFIG_GROUP_ACTIVITIES_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_ROLE_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_CONFIG_GROUP_USE_DEFAULT</option>
+        </field>
+
+        <field
+            name="group_membership"
+            type="usergrouplist"
+            label="COM_WENDFOLD_CONFIG_GROUP_MEMBERSHIP_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_ROLE_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_CONFIG_GROUP_USE_DEFAULT</option>
+        </field>
+
+        <field
+            name="group_officer"
+            type="usergrouplist"
+            label="COM_WENDFOLD_CONFIG_GROUP_OFFICER_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_ROLE_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_CONFIG_GROUP_USE_DEFAULT</option>
+        </field>
+
+        <field
+            name="group_webmaster"
+            type="usergrouplist"
+            label="COM_WENDFOLD_CONFIG_GROUP_WEBMASTER_LABEL"
+            description="COM_WENDFOLD_CONFIG_GROUP_ROLE_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_CONFIG_GROUP_USE_DEFAULT</option>
+        </field>
+
+        <field
+            name="created_group_ids"
+            type="hidden"
+            label="COM_WENDFOLD_CONFIG_CREATED_GROUP_IDS_LABEL"
+            description="COM_WENDFOLD_CONFIG_CREATED_GROUP_IDS_DESC"
+            default=""
+            filter="string"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Uninstall
+         Opt-in removal of images/wendfold on uninstall.
+    ============================================================ -->
+    <fieldset
+        name="uninstall"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_UNINSTALL"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_UNINSTALL_DESC"
+    >
+
+        <field
+            name="remove_uploaded_files"
+            type="radio"
+            layout="joomla.form.field.radio.switcher"
+            label="COM_WENDFOLD_CONFIG_REMOVE_UPLOADED_FILES_LABEL"
+            description="COM_WENDFOLD_CONFIG_REMOVE_UPLOADED_FILES_DESC"
+            default="0"
+            filter="integer"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Membership defaults
+         Dues amount and waiver version for new records.
+    ============================================================ -->
+    <fieldset
+        name="membership"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_MEMBERSHIP"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_MEMBERSHIP_DESC"
+    >
+
+        <field
+            name="dues_amount"
+            type="number"
+            label="COM_WENDFOLD_CONFIG_DUES_AMOUNT_LABEL"
+            description="COM_WENDFOLD_CONFIG_DUES_AMOUNT_DESC"
+            default="25.00"
+            min="0"
+            step="0.01"
+            filter="float"
+        />
+
+        <field
+            name="waiver_version"
+            type="text"
+            label="COM_WENDFOLD_CONFIG_WAIVER_VERSION_LABEL"
+            description="COM_WENDFOLD_CONFIG_WAIVER_VERSION_DESC"
+            default="2026"
+            maxlength="20"
+            filter="string"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Renewal Reminders
+         Controls automated reminder email timing.
+    ============================================================ -->
+    <fieldset
+        name="reminders"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_REMINDERS"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_REMINDERS_DESC"
+    >
+
+        <field
+            name="reminder_days_60"
+            type="number"
+            label="COM_WENDFOLD_CONFIG_REMINDER_60_LABEL"
+            description="COM_WENDFOLD_CONFIG_REMINDER_60_DESC"
+            default="60"
+            min="1"
+            max="365"
+        />
+
+        <field
+            name="reminder_days_30"
+            type="number"
+            label="COM_WENDFOLD_CONFIG_REMINDER_30_LABEL"
+            description="COM_WENDFOLD_CONFIG_REMINDER_30_DESC"
+            default="30"
+            min="1"
+            max="365"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Privacy
+         OpenStreetMap tiles are the optional third-party request for
+         the GPX route map and the kickstands-up marker map. Default
+         on. See docs/privacy.md. No Google content loads on page view.
+    ============================================================ -->
+    <fieldset
+        name="privacy"
+        label="COM_WENDFOLD_CONFIG_FIELDSET_PRIVACY"
+        description="COM_WENDFOLD_CONFIG_FIELDSET_PRIVACY_DESC"
+    >
+
+        <field
+            name="osm_tiles"
+            type="radio"
+            layout="joomla.form.field.radio.switcher"
+            label="COM_WENDFOLD_CONFIG_OSM_TILES_LABEL"
+            description="COM_WENDFOLD_CONFIG_OSM_TILES_DESC"
+            default="1"
+            filter="integer"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Permissions
+         Component ACL, including wendfold.emailblast.
+    ============================================================ -->
+    <fieldset
+        name="permissions"
+        label="JCONFIG_PERMISSIONS_LABEL"
+        description="JCONFIG_PERMISSIONS_DESC"
+    >
+
+        <field
+            name="rules"
+            type="rules"
+            label="JCONFIG_PERMISSIONS_LABEL"
+            filter="rules"
+            validate="rules"
+            component="com_wendfold"
+            section="component"
+        />
+
+    </fieldset>
+
+</config>

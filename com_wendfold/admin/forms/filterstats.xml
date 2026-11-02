@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+    <fields name="filter">
+        
+        <field
+            name="search"
+            type="text"
+            inputmode="search"
+            label="COM_WENDFOLD_FILTER_SEARCH_LABEL"
+            description="COM_WENDFOLD_FILTER_SEARCH_DESC"
+            hint="JSEARCH_FILTER"
+        />
+
+    </fields>
+
+    <fields name="list">
+        
+        <field
+            name="fullordering"
+            type="list"
+            label="COM_WENDFOLD_LIST_FULL_ORDERING"
+            default="total_miles_ytd DESC"
+            onchange="this.form.submit();"
+            class="form-select"
+        >
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="member_name ASC">COM_WENDFOLD_STATS_MEMBER_ASC</option>
+            <option value="member_name DESC">COM_WENDFOLD_STATS_MEMBER_DESC</option>
+            <option value="total_miles_ytd DESC">COM_WENDFOLD_STATS_MILES_DESC</option>
+            <option value="total_miles_ytd ASC">COM_WENDFOLD_STATS_MILES_ASC</option>
+            <option value="events_attended_ytd DESC">COM_WENDFOLD_STATS_EVENTS_DESC</option>
+            <option value="events_attended_ytd ASC">COM_WENDFOLD_STATS_EVENTS_ASC</option>
+        </field>
+
+        <field
+            name="limit"
+            type="limitbox"
+            class="input-mini"
+            default="25"
+            label="COM_WENDFOLD_LIST_LIMIT"
+            description="COM_WENDFOLD_LIST_LIMIT_DESC"
+        />
+
+    </fields>
+</form>

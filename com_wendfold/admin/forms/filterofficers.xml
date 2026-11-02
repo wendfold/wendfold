@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+    <fields name="filter">
+
+        <!-- Search Field -->
+        <field
+            name="search"
+            type="text"
+            label="COM_WENDFOLD_OFFICERS_FILTER_SEARCH_LABEL"
+            description="COM_WENDFOLD_OFFICERS_FILTER_SEARCH_DESC"
+            hint="JSEARCH_FILTER"
+            class="form-control"
+        />
+
+        <!-- Published Filter -->
+        <field
+            name="published"
+            type="status"
+            label="JOPTION_SELECT_PUBLISHED"
+            onchange="this.form.submit();"
+            class="form-select"
+        >
+            <option value="">JOPTION_SELECT_PUBLISHED</option>
+        </field>
+
+        <!-- Role Filter -->
+        <field
+            name="role_id"
+            type="lookup"
+            lookup="officerrole"
+            addfieldprefix="Wendfold\Component\Wendfold\Administrator\Field"
+            label="COM_WENDFOLD_OFFICERS_FILTER_ROLE"
+            onchange="this.form.submit();"
+            class="form-select"
+        >
+            <option value="">COM_WENDFOLD_OFFICERS_FILTER_ROLE</option>
+        </field>
+
+        <!-- Current/Historical Filter -->
+        <!-- FIX: label was hardcoded "Status" string  -  replaced with Joomla core key JSTATUS -->
+        <field
+            name="is_current"
+            type="list"
+            label="JSTATUS"
+            onchange="this.form.submit();"
+            class="form-select"
+        >
+            <option value="">COM_WENDFOLD_OFFICERS_FILTER_ALL</option>
+            <option value="1">COM_WENDFOLD_OFFICERS_FILTER_CURRENT</option>
+            <option value="0">COM_WENDFOLD_OFFICERS_FILTER_HISTORICAL</option>
+        </field>
+
+    </fields>
+
+    <fields name="list">
+
+        <!-- List Limit -->
+        <field
+            name="limit"
+            type="limitbox"
+            label="JGLOBAL_LIST_LIMIT"
+            default="25"
+            class="form-select"
+        />
+
+        <!--
+            Sort Order
+            FIX 1: option values previously used alias 'a.' but the model query aliases
+                   officers as 'o.'  -  mismatched aliases cause MySQL errors or wrong sorts.
+            FIX 2: 'member_name ASC' was a SELECT alias, not a real column reference.
+                   Changed to 'u.name ASC' to match the query's JOIN alias.
+            FIX 3: removed raw English '(Newest First)' text appended to a lang key.
+        -->
+        <field
+            name="fullordering"
+            type="list"
+            label="JGLOBAL_SORT_BY"
+            default="o.role_order ASC"
+            onchange="this.form.submit();"
+            class="form-select"
+        >
+            <option value="">JGLOBAL_SORT_BY</option>
+            <option value="o.role_order ASC">JGRID_HEADING_ORDERING_ASC</option>
+            <option value="o.role_order DESC">JGRID_HEADING_ORDERING_DESC</option>
+            <option value="u.name ASC">COM_WENDFOLD_OFFICERS_HEADING_MEMBER</option>
+            <option value="r.title ASC">COM_WENDFOLD_OFFICERS_HEADING_ROLE</option>
+            <option value="o.term_start DESC">COM_WENDFOLD_OFFICERS_HEADING_TERM</option>
+            <option value="o.id ASC">JGRID_HEADING_ID_ASC</option>
+            <option value="o.id DESC">JGRID_HEADING_ID_DESC</option>
+        </field>
+
+        <!-- Direction -->
+        <field
+            name="directionTable"
+            type="hidden"
+            default="asc"
+        />
+
+        <!-- Ordering -->
+        <field
+            name="ordering"
+            type="hidden"
+            default="o.role_order"
+        />
+
+    </fields>
+</form>

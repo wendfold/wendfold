@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+	<fieldset name="details" label="COM_WENDFOLD_AWARD_DETAILS">
+		<field name="id" type="hidden" filter="integer" />
+		<field
+			name="title"
+			type="text"
+			label="JGLOBAL_TITLE"
+			description="COM_WENDFOLD_LOOKUP_TITLE_DESC"
+			required="true"
+			maxlength="255"
+			filter="string"
+		/>
+		<field
+			name="description"
+			type="textarea"
+			label="JGLOBAL_DESCRIPTION"
+			description="COM_WENDFOLD_AWARD_DESCRIPTION_DESC"
+			rows="3"
+			filter="safehtml"
+		/>
+		<field
+			name="image"
+			type="media"
+			label="COM_WENDFOLD_AWARD_IMAGE_LABEL"
+			description="COM_WENDFOLD_AWARD_IMAGE_DESC"
+			directory=""
+			preview="true"
+		/>
+		<field
+			name="period_type"
+			type="list"
+			label="COM_WENDFOLD_AWARD_PERIOD_TYPE_LABEL"
+			description="COM_WENDFOLD_AWARD_PERIOD_TYPE_DESC"
+			default="1"
+			filter="integer"
+			required="true"
+		>
+			<option value="1">COM_WENDFOLD_AWARD_PERIOD_LIFETIME</option>
+			<option value="2">COM_WENDFOLD_AWARD_PERIOD_CALENDAR_YEAR</option>
+			<option value="3">COM_WENDFOLD_AWARD_PERIOD_ROLLING</option>
+			<option value="4">COM_WENDFOLD_AWARD_PERIOD_CUSTOM</option>
+		</field>
+		<field
+			name="rolling_days"
+			type="number"
+			label="COM_WENDFOLD_AWARD_ROLLING_DAYS_LABEL"
+			description="COM_WENDFOLD_AWARD_ROLLING_DAYS_DESC"
+			min="1"
+			max="3660"
+			filter="integer"
+			showon="period_type:3"
+		/>
+		<field
+			name="period_start"
+			type="calendar"
+			label="COM_WENDFOLD_AWARD_PERIOD_START_LABEL"
+			description="COM_WENDFOLD_AWARD_PERIOD_START_DESC"
+			filter="date"
+			showtime="false"
+			format="%Y-%m-%d"
+			showon="period_type:4"
+		/>
+		<field
+			name="period_end"
+			type="calendar"
+			label="COM_WENDFOLD_AWARD_PERIOD_END_LABEL"
+			description="COM_WENDFOLD_AWARD_PERIOD_END_DESC"
+			filter="date"
+			showtime="false"
+			format="%Y-%m-%d"
+			showon="period_type:4"
+		/>
+		<field
+			name="match_mode"
+			type="list"
+			label="COM_WENDFOLD_AWARD_MATCH_MODE_LABEL"
+			description="COM_WENDFOLD_AWARD_MATCH_MODE_DESC"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">COM_WENDFOLD_AWARD_MATCH_ALL</option>
+			<option value="2">COM_WENDFOLD_AWARD_MATCH_ANY</option>
+		</field>
+		<field
+			name="repeat_mode"
+			type="list"
+			label="COM_WENDFOLD_AWARD_REPEAT_MODE_LABEL"
+			description="COM_WENDFOLD_AWARD_REPEAT_MODE_DESC"
+			default="0"
+			filter="integer"
+		>
+			<option value="0">COM_WENDFOLD_AWARD_REPEAT_ONCE</option>
+			<option value="1">COM_WENDFOLD_AWARD_REPEAT_TIERED</option>
+		</field>
+		<field
+			name="max_tiers"
+			type="number"
+			label="COM_WENDFOLD_AWARD_MAX_TIERS_LABEL"
+			description="COM_WENDFOLD_AWARD_MAX_TIERS_DESC"
+			min="1"
+			max="1000"
+			filter="integer"
+		/>
+		<field
+			name="streak_periods"
+			type="number"
+			label="COM_WENDFOLD_AWARD_STREAK_PERIODS_LABEL"
+			description="COM_WENDFOLD_AWARD_STREAK_PERIODS_DESC"
+			min="1"
+			max="100"
+			filter="integer"
+		/>
+		<field
+			name="revoke_policy"
+			type="list"
+			label="COM_WENDFOLD_AWARD_REVOKE_POLICY_LABEL"
+			description="COM_WENDFOLD_AWARD_REVOKE_POLICY_DESC"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">COM_WENDFOLD_AWARD_REVOKE_AUTO</option>
+			<option value="2">COM_WENDFOLD_AWARD_REVOKE_FLAG</option>
+		</field>
+		<field
+			name="published"
+			type="list"
+			label="JSTATUS"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field
+			name="ordering"
+			type="number"
+			label="JGRID_HEADING_ORDERING"
+			default="0"
+			filter="integer"
+		/>
+		<field
+			name="criteria"
+			type="subform"
+			label="COM_WENDFOLD_AWARD_CRITERIA_LABEL"
+			description="COM_WENDFOLD_AWARD_CRITERIA_DESC"
+			multiple="true"
+			formsource="administrator/components/com_wendfold/forms/awardcriterion.xml"
+			buttons="add,remove,move"
+			layout="joomla.form.field.subform.repeatable-table"
+		/>
+	</fieldset>
+</form>

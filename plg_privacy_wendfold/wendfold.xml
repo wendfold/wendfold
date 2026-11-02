@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="privacy" method="upgrade">
+	<name>PLG_PRIVACY_WENDFOLD</name>
+	<creationDate>2026-11-02</creationDate>
+	<author>Adan Lozano</author>
+	<authorEmail>support@wendfold.com</authorEmail>
+	<authorUrl>https://wendfold.com</authorUrl>
+	<copyright>Copyright (C) 2026 Adan Lozano</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<version>1.0.0</version>
+	<description>PLG_PRIVACY_WENDFOLD_XML_DESCRIPTION</description>
+	<element>wendfold</element>
+	<namespace path="src">Wendfold\Plugin\Privacy\Wendfold</namespace>
+
+	<files>
+		<folder>services</folder>
+		<folder>src</folder>
+		<filename plugin="wendfold">wendfold.php</filename>
+		<filename>LICENSE.txt</filename>
+	</files>
+
+	<languages folder="language">
+		<language tag="en-GB">en-GB/plg_privacy_wendfold.ini</language>
+		<language tag="en-GB">en-GB/plg_privacy_wendfold.sys.ini</language>
+	</languages>
+</extension>

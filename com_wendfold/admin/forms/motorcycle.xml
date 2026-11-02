@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<!--
+    Wendfold - Motorcycle Edit Form
+    admin/forms/motorcycle.xml
+
+    Maps to #__wendfold_motorcycles columns.
+    year is YEAR type - stored as 4-digit integer or NULL.
+-->
+<form>
+    <fieldset name="details">
+
+        <field
+            name="id"
+            type="hidden"
+            filter="integer"
+            default="0"
+        />
+
+        <!--
+            profile_id: hidden on the form - set from URL when adding,
+            preserved via hidden field when editing.
+        -->
+        <field
+            name="profile_id"
+            type="hidden"
+            filter="integer"
+            default="0"
+        />
+
+        <field
+            name="year"
+            type="number"
+            label="COM_WENDFOLD_FIELD_MOTO_YEAR_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_YEAR_DESC"
+            hint="COM_WENDFOLD_FIELD_MOTO_YEAR_HINT"
+            min="1903"
+            max="2100"
+            step="1"
+            required="false"
+            filter="integer"
+            class="form-control"
+        />
+
+        <field
+            name="make"
+            type="text"
+            label="COM_WENDFOLD_FIELD_MOTO_MAKE_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_MAKE_DESC"
+            size="50"
+            maxlength="50"
+            default=""
+            required="false"
+            filter="string"
+            class="form-control"
+        />
+
+        <field
+            name="model"
+            type="text"
+            label="COM_WENDFOLD_FIELD_MOTO_MODEL_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_MODEL_DESC"
+            hint="COM_WENDFOLD_FIELD_MOTO_MODEL_HINT"
+            size="100"
+            maxlength="100"
+            required="false"
+            filter="string"
+            class="form-control"
+        />
+
+        <field
+            name="color"
+            type="text"
+            label="COM_WENDFOLD_FIELD_MOTO_COLOR_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_COLOR_DESC"
+            size="50"
+            maxlength="50"
+            required="false"
+            filter="string"
+            class="form-control"
+        />
+
+        <field
+            name="nickname"
+            type="text"
+            label="COM_WENDFOLD_FIELD_MOTO_NICKNAME_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_NICKNAME_DESC"
+            hint="COM_WENDFOLD_FIELD_MOTO_NICKNAME_HINT"
+            size="50"
+            maxlength="50"
+            required="false"
+            filter="string"
+            class="form-control"
+        />
+
+        <field
+            name="vin"
+            type="text"
+            label="COM_WENDFOLD_FIELD_MOTO_VIN_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_VIN_DESC"
+            hint="COM_WENDFOLD_FIELD_MOTO_VIN_HINT"
+            size="17"
+            maxlength="30"
+            required="false"
+            filter="string"
+            class="form-control"
+        />
+
+        <field
+            name="is_primary"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_MOTO_IS_PRIMARY_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_IS_PRIMARY_DESC"
+            default="0"
+            filter="integer"
+            class="btn-group btn-group-yesno"
+        >
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field
+            name="published"
+            type="list"
+            label="JSTATUS"
+            description="JFIELD_PUBLISHED_DESC"
+            default="1"
+            filter="integer"
+        >
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+
+        <field
+            name="notes"
+            type="textarea"
+            label="COM_WENDFOLD_FIELD_NOTES_LABEL"
+            description="COM_WENDFOLD_FIELD_MOTO_NOTES_DESC"
+            rows="4"
+            cols="50"
+            required="false"
+            filter="string"
+            class="form-control"
+        />
+
+    </fieldset>
+</form>

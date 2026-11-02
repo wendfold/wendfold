@@ -1,0 +1,678 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/ActivityreportController.php
+
+		-
+			message: '#^Call to method getExportData\(\) on an unknown class Wendfold\\Component\\Wendfold\\Administrator\\Controller\\ActivityreportModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/ActivityreportController.php
+
+		-
+			message: '#^Call to method getFilters\(\) on an unknown class Wendfold\\Component\\Wendfold\\Administrator\\Controller\\ActivityreportModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/ActivityreportController.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$model contains unknown class Wendfold\\Component\\Wendfold\\Administrator\\Controller\\ActivityreportModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/ActivityreportController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 10
+			path: com_wendfold/admin/src/Controller/AttendanceController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/AttendancetrendsController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: com_wendfold/admin/src/Controller/EmailblastController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:setHeader\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/EmailblastController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\MVC\\View\\ViewInterface\:\:setModel\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/EmailblastController.php
+
+		-
+			message: '#^Return type \(void\) of method Wendfold\\Component\\Wendfold\\Administrator\\Controller\\EmailblastController\:\:display\(\) should be compatible with return type \(static\(Joomla\\CMS\\MVC\\Controller\\BaseController\)\) of method Joomla\\CMS\\MVC\\Controller\\BaseController\:\:display\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: com_wendfold/admin/src/Controller/EmailblastController.php
+
+		-
+			message: '#^Return type \(void\) of method Wendfold\\Component\\Wendfold\\Administrator\\Controller\\MemberController\:\:save\(\) should be compatible with return type \(bool\) of method Joomla\\CMS\\MVC\\Controller\\FormController\:\:save\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: com_wendfold/admin/src/Controller/MemberController.php
+
+
+		-
+			message: '#^Parameter \#3 \$app of method Joomla\\CMS\\MVC\\Controller\\FormController\:\:__construct\(\) expects Joomla\\CMS\\Application\\CMSWebApplicationInterface\|null, Joomla\\CMS\\Application\\CMSApplicationInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: com_wendfold/admin/src/Controller/OfficerController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:setUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Cannot call method keepMember\(\) on bool\|Joomla\\CMS\\MVC\\Model\\BaseDatabaseModel\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Cannot call method processCsvUpload\(\) on bool\|Joomla\\CMS\\MVC\\Model\\BaseDatabaseModel\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Cannot call method removeFromRoster\(\) on bool\|Joomla\\CMS\\MVC\\Model\\BaseDatabaseModel\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Cannot call method runLapsedCleanup\(\) on bool\|Joomla\\CMS\\MVC\\Model\\BaseDatabaseModel\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Cannot call method sendRenewalReminders\(\) on bool\|Joomla\\CMS\\MVC\\Model\\BaseDatabaseModel\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: com_wendfold/admin/src/Controller/SyncController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/admin/src/Model/ActivityreportModel.php
+
+		-
+			message: '#^Method Wendfold\\Component\\Wendfold\\Administrator\\Model\\AttendanceModel\:\:getListQuery\(\) should return Joomla\\Database\\DatabaseQuery but returns Joomla\\Database\\QueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: com_wendfold/admin/src/Model/AttendanceModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/admin/src/Model/AttendancetrendsModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/admin/src/Model/DuesModel.php
+
+		-
+			message: '#^Method Wendfold\\Component\\Wendfold\\Administrator\\Model\\DuesModel\:\:getListQuery\(\) should return Joomla\\Database\\DatabaseQuery but returns Joomla\\Database\\QueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: com_wendfold/admin/src/Model/DuesModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Model/DuespaymentModel.php
+
+		-
+			message: '#^Variable \$form in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: com_wendfold/admin/src/Model/DuespaymentModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Model/EventModel.php
+
+		-
+			message: '#^Variable \$form in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: com_wendfold/admin/src/Model/EventModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: com_wendfold/admin/src/Model/EventsModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Model/LocationModel.php
+
+		-
+			message: '#^Return type \(object\) of method Wendfold\\Component\\Wendfold\\Administrator\\Model\\LocationModel\:\:loadFormData\(\) should be compatible with return type \(array\) of method Joomla\\CMS\\MVC\\Model\\FormModel\:\:loadFormData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: com_wendfold/admin/src/Model/LocationModel.php
+
+		-
+			message: '#^Variable \$form in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: com_wendfold/admin/src/Model/LocationModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/admin/src/Model/LocationsModel.php
+
+		-
+			message: '#^Method Wendfold\\Component\\Wendfold\\Administrator\\Model\\LocationsModel\:\:getListQuery\(\) should return Joomla\\Database\\DatabaseQuery but returns Joomla\\Database\\QueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: com_wendfold/admin/src/Model/LocationsModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Model/MemberModel.php
+
+		-
+			message: '#^Return type \(object\) of method Wendfold\\Component\\Wendfold\\Administrator\\Model\\MemberModel\:\:loadFormData\(\) should be compatible with return type \(array\) of method Joomla\\CMS\\MVC\\Model\\FormModel\:\:loadFormData\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: com_wendfold/admin/src/Model/MemberModel.php
+
+		-
+			message: '#^Variable \$form in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: com_wendfold/admin/src/Model/MemberModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: com_wendfold/admin/src/Model/MembersModel.php
+
+		-
+			message: '#^Method Wendfold\\Component\\Wendfold\\Administrator\\Model\\MembersModel\:\:getListQuery\(\) should return Joomla\\Database\\DatabaseQuery but returns Joomla\\Database\\QueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: com_wendfold/admin/src/Model/MembersModel.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between ''mt\.title AS…''\|''p\.dues_paid''\|''p\.member_number''\|''p\.member_since''\|''p\.membership_type_id''\|''p\.published''\|''p\.renewal_date''\|''u\.email''\|''u\.name''\|''u\.username'' and ''p\.id'' will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: com_wendfold/admin/src/Model/MembersModel.php
+
+
+
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Model/MotorcycleModel.php
+
+		-
+			message: '#^Variable \$form in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: com_wendfold/admin/src/Model/MotorcycleModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserState\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/Model/OfficerModel.php
+
+		-
+			message: '#^Variable \$form in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: com_wendfold/admin/src/Model/OfficerModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getUserStateFromRequest\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: com_wendfold/admin/src/Model/OfficersModel.php
+
+		-
+			message: '#^Method Wendfold\\Component\\Wendfold\\Administrator\\Model\\OfficersModel\:\:getListQuery\(\) should return Joomla\\Database\\DatabaseQuery but returns Joomla\\Database\\QueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: com_wendfold/admin/src/Model/OfficersModel.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Toolbar\\ToolbarButton\:\:url\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/View/Activityreport/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Toolbar\\ToolbarButton\:\:url\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/admin/src/View/Attendancetrends/HtmlView.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: com_wendfold/admin/tmpl/_includes/lookup_edit.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 10
+			path: com_wendfold/admin/tmpl/_includes/lookup_list.php
+
+		-
+			message: '#^Parameter \#1 \$string of function htmlspecialchars expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: com_wendfold/admin/tmpl/attendance/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 6
+			path: com_wendfold/admin/tmpl/attendance/default.php
+
+		-
+			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
+			identifier: greater.alwaysTrue
+			count: 1
+			path: com_wendfold/admin/tmpl/attendancetrends/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 9
+			path: com_wendfold/admin/tmpl/dues/default.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 3
+			path: com_wendfold/admin/tmpl/duespayment/edit.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: com_wendfold/admin/tmpl/duespayment/edit.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 3
+			path: com_wendfold/admin/tmpl/event/edit.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: com_wendfold/admin/tmpl/event/edit.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 16
+			path: com_wendfold/admin/tmpl/events/default.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Location\\HtmlView\:\:\$form\.$#'
+			identifier: property.protected
+			count: 6
+			path: com_wendfold/admin/tmpl/location/edit.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Location\\HtmlView\:\:\$item\.$#'
+			identifier: property.protected
+			count: 1
+			path: com_wendfold/admin/tmpl/location/edit.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 12
+			path: com_wendfold/admin/tmpl/locations/default.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Member\\HtmlView\:\:\$form\.$#'
+			identifier: property.protected
+			count: 7
+			path: com_wendfold/admin/tmpl/member/edit.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Member\\HtmlView\:\:\$item\.$#'
+			identifier: property.protected
+			count: 14
+			path: com_wendfold/admin/tmpl/member/edit.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Member\\HtmlView\:\:\$motorcycles\.$#'
+			identifier: property.protected
+			count: 1
+			path: com_wendfold/admin/tmpl/member/edit.php
+
+		-
+			message: '#^Right side of && is always false\.$#'
+			identifier: booleanAnd.rightAlwaysFalse
+			count: 1
+			path: com_wendfold/admin/tmpl/members/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 12
+			path: com_wendfold/admin/tmpl/members/default.php
+
+
+
+
+
+
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Motorcycle\\HtmlView\:\:\$form\.$#'
+			identifier: property.protected
+			count: 5
+			path: com_wendfold/admin/tmpl/motorcycle/edit.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Motorcycle\\HtmlView\:\:\$memberName\.$#'
+			identifier: property.protected
+			count: 1
+			path: com_wendfold/admin/tmpl/motorcycle/edit.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Officer\\HtmlView\:\:\$form\.$#'
+			identifier: property.protected
+			count: 4
+			path: com_wendfold/admin/tmpl/officer/edit.php
+
+		-
+			message: '#^Access to protected property Wendfold\\Component\\Wendfold\\Administrator\\View\\Officer\\HtmlView\:\:\$item\.$#'
+			identifier: property.protected
+			count: 6
+			path: com_wendfold/admin/tmpl/officer/edit.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: com_wendfold/admin/tmpl/officers/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 6
+			path: com_wendfold/admin/tmpl/stats/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: com_wendfold/admin/tmpl/statusreport/default.php
+
+		-
+			message: '#^Parameter \#1 \$string of function htmlspecialchars expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: com_wendfold/admin/tmpl/sync/default.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/site/src/Controller/CheckinController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: com_wendfold/site/src/Controller/EventController.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: com_wendfold/site/src/Controller/EventController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: com_wendfold/site/src/Controller/MeetingattendanceController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: com_wendfold/site/src/Controller/MyrsvpsController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: com_wendfold/site/src/Controller/ProfileeditController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: com_wendfold/site/src/Controller/RcattendanceController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:setHeader\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/site/src/Controller/RcattendanceController.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getMenu\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/site/src/Helper/RouteHelper.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Joomla\\CMS\\Application\\CMSApplicationInterface and ''isClient'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: com_wendfold/site/src/Helper/RouteHelper.php
+
+		-
+			message: '#^Method Wendfold\\Component\\Wendfold\\Site\\Model\\OfficersModel\:\:getListQuery\(\) should return Joomla\\Database\\DatabaseQuery but returns Joomla\\Database\\QueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: com_wendfold/site/src/Model/OfficersModel.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: com_wendfold/site/src/Service/Router.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Joomla\\CMS\\Application\\CMSApplicationInterface and ''getName'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: com_wendfold/site/src/Service/Router.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Joomla\\CMS\\Application\\CMSApplicationInterface and ''isClient'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: com_wendfold/site/src/Service/Router.php
+
+		-
+			message: '#^Constructor of class Wendfold\\Component\\Wendfold\\Site\\Service\\Router has an unused parameter \$categoryFactory\.$#'
+			identifier: constructor.unusedParameter
+			count: 1
+			path: com_wendfold/site/src/Service/Router.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/site/src/View/Dashboard/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Extension\\ComponentInterface\:\:getMVCFactory\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/site/src/View/Dashboard/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: com_wendfold/site/src/View/Meetingattendance/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/site/src/View/Myrsvps/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: com_wendfold/site/src/View/Profileedit/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: com_wendfold/site/src/View/Rcattendance/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:redirect\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: com_wendfold/site/src/View/Volunteerboard/HtmlView.php
+
+		-
+			message: '#^Call to an undefined method Joomla\\CMS\\Application\\CMSApplicationInterface\:\:getTemplate\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: com_wendfold/site/tmpl/_includes/button_helper.php
+
+		-
+			message: '#^Offset 1\|2\|3 on array\{1\: string, 2\: string, 3\: string\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: com_wendfold/site/tmpl/_includes/volunteer_section.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 9
+			path: com_wendfold/site/tmpl/checkin/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: com_wendfold/site/tmpl/dashboard/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: com_wendfold/site/tmpl/event/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: com_wendfold/site/tmpl/events/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: com_wendfold/site/tmpl/meetingattendance/default.php
+
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: com_wendfold/site/tmpl/myrsvps/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: com_wendfold/site/tmpl/profileedit/default.php
+
+		-
+			message: '#^Comparison operation "\>" between int\<1, max\> and 0 is always true\.$#'
+			identifier: greater.alwaysTrue
+			count: 1
+			path: com_wendfold/site/tmpl/rcattendance/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 5
+			path: com_wendfold/site/tmpl/rcattendance/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: com_wendfold/site/tmpl/trip/default.php
+
+		-
+			message: '#^Variable \$this might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: com_wendfold/site/tmpl/volunteerboard/default.php
+
+		-
+			message: '#^Parameter \#1 \$text of method Joomla\\Database\\DatabaseInterface\:\:quote\(\) expects array\|string, int given\.$#'
+			identifier: argument.type
+			count: 7
+			path: plg_task_wendfold/src/Extension/Wendfold.php
