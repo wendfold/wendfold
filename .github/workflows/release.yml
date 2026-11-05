@@ -1,7 +1,7 @@
 # Release workflow for Wendfold.
 #
 # Trigger: push of a tag vX.Y.Z (optionally vX.Y.Z-rc.N), created per RELEASING.md.
-# Result:  1. A site-upload bundle for wendfold.com (the primary download host),
+# Result:  1. A site-upload bundle for wendfold.com (update feed host),
 #             uploaded as the artifact "wendfold-site-bundle-vX.Y.Z" and also
 #             attached to the draft release as wendfold-site-bundle-vX.Y.Z.zip.
 #             It contains ONLY these two top-level folders:
@@ -10,7 +10,7 @@
 #               updates/pkg_wendfold.xml   (<sha256> filled in)
 #               updates/changelog.xml      (only if it exists in the tree)
 #             The bundle has no child ZIPs and no unversioned SHA256SUMS.txt.
-#          2. A DRAFT GitHub release (a mirror) with ONLY these assets:
+#          2. A DRAFT GitHub release (the package source once published) with ONLY these assets:
 #               pkg_wendfold_vX.Y.Z.zip
 #               SHA256SUMS-vX.Y.Z.txt      (package-only; the same file as
 #                                           downloads/ in the bundle)
@@ -25,7 +25,9 @@
 #          nothing is committed back to the repo.
 #
 # The <downloadurl> of the matching <update> entry must be exactly
-#   https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip
+#   https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/pkg_wendfold_vX.Y.Z.zip
+# (the GitHub Releases asset is the single package source; it resolves only
+# once the draft release is published)
 #
 # Actions are pinned to full commit SHAs (see ci.yml for versions).
 #   actions/checkout        v7.0.1 3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -71,7 +73,7 @@ jobs:
       GH_REPO: ${{ github.repository }}
       UPDATE_XML: updates/pkg_wendfold.xml
       CHANGELOG_XML: updates/changelog.xml
-      DOWNLOAD_BASE: https://wendfold.com/downloads
+      DOWNLOAD_BASE: https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}
       BUNDLE_DIR: build/site-bundle
       # The only directory the draft release uploads from (see the Guard step).
       STAGE_DIR: build/release-upload
@@ -120,7 +122,7 @@ jobs:
           grep -qE "^## \[${VERSION//./\\.}\]" CHANGELOG.md \
             || echo "::warning::CHANGELOG.md has no '## [${VERSION}]' section"
 
-      - name: Check package downloadurl points at wendfold.com
+      - name: Check package downloadurl points at the GitHub release asset
         env:
           VERSION: ${{ steps.tag.outputs.version }}
         run: |
@@ -145,7 +147,7 @@ jobs:
           PY
           ) || { echo "::error file=${UPDATE_XML}::could not read the <downloadurl> for ${VERSION} (see message above)"; exit 1; }
           if [[ "$actual" != "$expected" ]]; then
-            echo "::error file=${UPDATE_XML}::<downloadurl> for ${VERSION} must be exactly ${expected} but is '${actual}'. wendfold.com is the primary download host; fix updates/pkg_wendfold.xml and re-tag."
+            echo "::error file=${UPDATE_XML}::<downloadurl> for ${VERSION} must be exactly ${expected} but is '${actual}'. The GitHub release asset is the package source; fix updates/pkg_wendfold.xml and re-tag."
             exit 1
           fi
           echo "downloadurl OK: ${actual}"
@@ -279,7 +281,7 @@ jobs:
           {
             echo
             echo "---"
-            echo "**Download:** ${DOWNLOAD_BASE}/pkg_wendfold_v${VERSION}.zip (primary). The assets on this release are a mirror."
+            echo "**Download:** ${DOWNLOAD_BASE}/pkg_wendfold_v${VERSION}.zip (this release's asset; the package source used by Joomla updates)."
             echo
             echo "**Install:** upload \`pkg_wendfold_v${VERSION}.zip\` in Joomla under System > Install > Extensions."
             echo
@@ -296,7 +298,7 @@ jobs:
           mkdir -p "$STAGE_DIR"
           cp "build/dist/pkg_wendfold_v${VERSION}.zip" "$STAGE_DIR/"
           # Package-only, versioned checksum file: the same file the site
-          # bundle publishes, so the GitHub mirror and wendfold.com match.
+          # bundle publishes, so the GitHub release and the site bundle match.
           # build/dist/SHA256SUMS.txt also lists the child ZIPs and is not
           # a release asset.
           cp "${BUNDLE_DIR}/downloads/SHA256SUMS-v${VERSION}.txt" "$STAGE_DIR/"

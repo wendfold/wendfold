@@ -29,8 +29,10 @@ the public changelog.
 - Joomla update notifications for the whole suite from one update server,
   <https://wendfold.com/updates/pkg_wendfold.xml>. Joomla shows this changelog
   in System > Update > Extensions and in System > Manage > Extensions.
-- Downloads from <https://wendfold.com/download>: the package
-  `pkg_wendfold_v1.0.0.zip` and its checksum file `SHA256SUMS-v1.0.0.txt`.
+- Downloads from the GitHub release: the package
+  <https://github.com/wendfold/wendfold/releases/download/v1.0.0/pkg_wendfold_v1.0.0.zip>
+  and its checksum file `SHA256SUMS-v1.0.0.txt`. Joomla updates download the
+  same file. The <https://wendfold.com/download> page links to it.
 - Component option **OpenStreetMap map tiles** (on by default) and a short
   notice on GPX ride maps. The same option covers a local kickstands-up
   marker map when that location has coordinates. Turning it off draws the
@@ -57,8 +59,8 @@ the public changelog.
   writes the package sha256 into the update XML, builds the wendfold.com
   site-upload bundle (`downloads/pkg_wendfold_vX.Y.Z.zip`,
   `downloads/SHA256SUMS-vX.Y.Z.txt`, `updates/pkg_wendfold.xml`, and
-  `updates/changelog.xml` when present), and creates a draft GitHub release as a
-  mirror. The draft carries only `pkg_wendfold_vX.Y.Z.zip`,
+  `updates/changelog.xml` when present), and creates a draft GitHub release, which is
+  the package source once published. The draft carries only `pkg_wendfold_vX.Y.Z.zip`,
   `SHA256SUMS-vX.Y.Z.txt`, `pkg_wendfold.xml`, and the bundle ZIP; a guard step
   fails the job if a child ZIP or any other file is staged. The workflow never
   publishes the release or uploads anything to wendfold.com. <!-- internal -->
@@ -361,11 +363,12 @@ the public changelog.
   `sql/updates/mysql/1.0.0.sql` is the schema-version baseline recorded
   in `#__schemas`. The component installer does not run `ALTER TABLE`
   during install or update. <!-- internal -->
-- wendfold.com is the primary download host. Each release is published as
-  `https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip` with
-  `SHA256SUMS-vX.Y.Z.txt` beside it, and the update XML's `<downloadurl>` points
-  there. The release workflow fails if the `<downloadurl>` for the tagged version
-  is anything else. GitHub Releases is a mirror. <!-- internal -->
+- The GitHub release is the single package source. Each release is published as
+  `https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/pkg_wendfold_vX.Y.Z.zip`
+  with `SHA256SUMS-vX.Y.Z.txt` beside it, and the update XML's `<downloadurl>`
+  points there. The release workflow fails if the `<downloadurl>` for the tagged
+  version is anything else. wendfold.com keeps the update feed and the download
+  page. <!-- internal -->
 - PHPCS checks the Joomla coding standard, using
   `joomla/coding-standards` 3.0.0-alpha and PHP_CodeSniffer 3.13.6 pinned through
   Composer. On pull requests, each `CI (PHP x.y)` job fails on any PHPCS error
@@ -488,6 +491,8 @@ the public changelog.
 - CI and release builds update PHP to the latest patch release and fail if PHP is
   below the security floor for CVE-2026-109618 and CVE-2026-109619: 8.3.36,
   8.4.27, or 8.5.12. <!-- internal -->
+- Route map popups escape GPX waypoint names and descriptions, so text from an
+  uploaded GPX file cannot run script in the popup.
 
 ### Language
 
