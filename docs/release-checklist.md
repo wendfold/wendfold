@@ -4,8 +4,8 @@ This checklist is for publishing a clean, package-only public release of Wendfol
 
 The only published artifact is the suite package `pkg_wendfold_vX.Y.Z.zip`, with its checksum file `SHA256SUMS-vX.Y.Z.txt`:
 
-- **Primary download:** `https://wendfold.com/downloads/pkg_wendfold_v1.0.0.zip` and `https://wendfold.com/downloads/SHA256SUMS-v1.0.0.txt`, linked from <https://wendfold.com/download>.
-- **Mirror:** the GitHub Release, once the repository is public. The release workflow attaches exactly four assets: `pkg_wendfold_v1.0.0.zip`, `SHA256SUMS-v1.0.0.txt`, `pkg_wendfold.xml` (with `<sha256>` filled in), and `wendfold-site-bundle-v1.0.0.zip`.
+- **Package source:** `https://github.com/wendfold/wendfold/releases/download/v1.0.0/pkg_wendfold_v1.0.0.zip` and `https://github.com/wendfold/wendfold/releases/download/v1.0.0/SHA256SUMS-v1.0.0.txt` (GitHub Release assets), linked from <https://wendfold.com/download>.
+- **GitHub Release:** the release workflow attaches exactly four assets: `pkg_wendfold_v1.0.0.zip`, `SHA256SUMS-v1.0.0.txt`, `pkg_wendfold.xml` (with `<sha256>` filled in), and `wendfold-site-bundle-v1.0.0.zip`.
 
 The child ZIPs (`com_wendfold_*`, `plg_user_wendfold_*`, `plg_task_wendfold_*`, `plg_privacy_wendfold_*`) and the build's `SHA256SUMS.txt` are internal build outputs. They are never published on their own, anywhere. The release workflow's guard step fails the job if one is staged as a release asset.
 
@@ -17,7 +17,7 @@ Before building, confirm:
 - installer and uninstall behavior are in the known-good state
 - no stabilized front-end workflow is being changed as part of release prep
 - the public docs still describe `pkg_wendfold` as the only install path
-- the `<update>` entry for `1.0.0` in `updates/pkg_wendfold.xml` has a `<downloadurl>` of exactly `https://wendfold.com/downloads/pkg_wendfold_v1.0.0.zip` (the release workflow fails otherwise)
+- the `<update>` entry for `1.0.0` in `updates/pkg_wendfold.xml` has a `<downloadurl>` of exactly `https://github.com/wendfold/wendfold/releases/download/v1.0.0/pkg_wendfold_v1.0.0.zip` (the release workflow fails otherwise)
 
 ## 2. Build the release artifacts locally
 
@@ -65,7 +65,7 @@ Tag `v1.0.0` as described in `RELEASING.md`. The release workflow then produces:
 
 The bundle is what goes to wendfold.com.
 
-## 6. Review and publish the GitHub Release mirror
+## 6. Review and publish the GitHub Release
 
 Before publishing the draft, confirm:
 
@@ -92,8 +92,8 @@ In the release body and anywhere else users will copy instructions from:
 
 After publishing, verify:
 
-- `https://wendfold.com/downloads/pkg_wendfold_v1.0.0.zip` downloads, and its sha256 matches `SHA256SUMS-v1.0.0.txt`
-- the GitHub Release has exactly the four assets, and its `pkg_wendfold_v1.0.0.zip` and `SHA256SUMS-v1.0.0.txt` match the wendfold.com files
+- `https://github.com/wendfold/wendfold/releases/download/v1.0.0/pkg_wendfold_v1.0.0.zip` downloads, and its sha256 matches `SHA256SUMS-v1.0.0.txt`
+- the GitHub Release has exactly the four assets, and its `pkg_wendfold_v1.0.0.zip` and `SHA256SUMS-v1.0.0.txt` match the site bundle copies
 - release notes render cleanly
 - support docs and README links still make sense
 - the website download page shows only the package ZIP
@@ -104,6 +104,6 @@ The only update feed is `updates/pkg_wendfold.xml`. The bundle's copy, whose `<s
 
 Separately verify:
 
-- that update XML is the file Joomla fetches, its `<downloadurl>` is `https://wendfold.com/downloads/pkg_wendfold_v1.0.0.zip`, and its `<sha256>` matches that ZIP
+- that update XML is the file Joomla fetches, its `<downloadurl>` is `https://github.com/wendfold/wendfold/releases/download/v1.0.0/pkg_wendfold_v1.0.0.zip`, and its `<sha256>` matches that ZIP
 - update detection works on a Joomla 6 site that has the package installed
 - sites that previously registered the per-child Wendfold update URLs show only the package update site after this package is installed or updated

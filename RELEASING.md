@@ -4,8 +4,8 @@ This is the maintainer process for cutting a release. A release is a **signed an
 
 Releases are **package-only**. The only installer that is published is `pkg_wendfold_vX.Y.Z.zip`, with its checksum file `SHA256SUMS-vX.Y.Z.txt`:
 
-- **wendfold.com is the primary download:** `https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip` and `https://wendfold.com/downloads/SHA256SUMS-vX.Y.Z.txt`.
-- **GitHub Releases is a mirror** once the repository is public. The draft release carries exactly four assets: `pkg_wendfold_vX.Y.Z.zip`, `SHA256SUMS-vX.Y.Z.txt`, `pkg_wendfold.xml` (with `<sha256>` filled in), and `wendfold-site-bundle-vX.Y.Z.zip`.
+- **Package source, GitHub Releases:** `https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/pkg_wendfold_vX.Y.Z.zip` and `https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/SHA256SUMS-vX.Y.Z.txt`. This is the URL in the update feed's `<downloadurl>`. It resolves only after the draft release is published.
+- **wendfold.com** hosts the update feed (`https://wendfold.com/updates/pkg_wendfold.xml`) and the human download page <https://wendfold.com/download>, which links to the GitHub release. The draft release carries exactly four assets: `pkg_wendfold_vX.Y.Z.zip`, `SHA256SUMS-vX.Y.Z.txt`, `pkg_wendfold.xml` (with `<sha256>` filled in), and `wendfold-site-bundle-vX.Y.Z.zip`.
 
 The child ZIPs (`com_wendfold_*`, `plg_user_wendfold_*`, `plg_task_wendfold_*`) and the build's `SHA256SUMS.txt` are internal build outputs. They are never published on their own, anywhere; the release workflow's guard step fails the job if one is staged as a release asset.
 
@@ -75,7 +75,7 @@ The page text (`/tmp/wendfold-changelog-page.md`) is for <https://wendfold.com/c
 
 ### 2c. Add the update XML entry
 
-In `updates/pkg_wendfold.xml`, the package update server served at `https://wendfold.com/updates/pkg_wendfold.xml`, add or update the `<update>` entry for `X.Y.Z` with its `<version>` and a `<downloadurl>` of exactly `https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip`. wendfold.com is the primary download host. GitHub Releases is only a mirror, once the repository is public. The release workflow fails if the URL is anything else. Keep `<sha256>SHA256_PLACEHOLDER</sha256>` (or leave that element empty). That text is not a real hash. `.github/workflows/release.yml` copies the file and `scripts/release/set-update-sha256.py` replaces the `<sha256>` element with the sha256 of `pkg_wendfold_vX.Y.Z.zip`. The edited XML is a release asset and is not committed back, because the hash only exists once the ZIP is built.
+In `updates/pkg_wendfold.xml`, the package update server served at `https://wendfold.com/updates/pkg_wendfold.xml`, add or update the `<update>` entry for `X.Y.Z` with its `<version>` and a `<downloadurl>` of exactly `https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/pkg_wendfold_vX.Y.Z.zip`. The GitHub Releases asset is the single package source. wendfold.com still hosts the update feed and the human download page. The release workflow fails if the URL is anything else. Keep `<sha256>SHA256_PLACEHOLDER</sha256>` (or leave that element empty). That text is not a real hash. `.github/workflows/release.yml` copies the file and `scripts/release/set-update-sha256.py` replaces the `<sha256>` element with the sha256 of `pkg_wendfold_vX.Y.Z.zip`. The edited XML is a release asset and is not committed back, because the hash only exists once the ZIP is built.
 
 ### 2d. Verify locally
 
@@ -107,7 +107,7 @@ On a pushed tag matching `v*.*.*`:
 
 1. Runs the full CI workflow: the `CI (PHP 8.3)`, `CI (PHP 8.4)`, and `CI (PHP 8.5)` jobs (PHP security floor, lint, PHPUnit, PHPStan, PHPCS report, XML checks, build, checksum and layout checks) and the `Schema` job. The draft release job needs it to pass.
 2. Checks the tag format, that the tag is annotated, and that all manifest versions match the tag.
-3. Checks that the `<downloadurl>` of the matching `<update>` entry in `updates/pkg_wendfold.xml` is exactly `https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip`. If not, it fails with the expected and actual values.
+3. Checks that the `<downloadurl>` of the matching `<update>` entry in `updates/pkg_wendfold.xml` is exactly `https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/pkg_wendfold_vX.Y.Z.zip`. If not, it fails with the expected and actual values.
 4. Runs `python3 build/build_release.py`, then `sha256sum -c SHA256SUMS.txt`.
 5. Prints the sha256 of every ZIP to the job log and the job summary.
 6. Copies `updates/pkg_wendfold.xml` and writes `<sha256>` for the package ZIP into the matching `<update>` entry with `scripts/release/set-update-sha256.py`. **The step fails if `updates/pkg_wendfold.xml` doesn't exist** or has no entry for the version. The edited XML becomes a release asset and is **not** committed back to `main`.
@@ -128,7 +128,7 @@ On a pushed tag matching `v*.*.*`:
    - `wendfold-site-bundle-vX.Y.Z.zip` (the same bundle, zipped)
 
    A guard step then fails the job if any staged file is a child ZIP (`com_*`, `plg_*`), is not on that allowlist, or is not a plain file; if an allowlisted file is missing; if the checksum file lists anything but the package ZIP; or if the bundle ZIP contains a child ZIP.
-9. Creates a **draft** release named `Wendfold vX.Y.Z` (the GitHub mirror) with exactly those four assets. Its notes are the public part of the `CHANGELOG.md` section for the version, printed by `scripts/release/generate-changelog.py --notes-out`: the section's headings and bullets as written, without the bullets tagged `<!-- internal -->` and without any HTML comment. The wendfold.com download link, the install step, and `sha256sum -c SHA256SUMS-vX.Y.Z.txt` follow. If the section is missing, the job warns and the notes have only those three lines. If the script fails (for example, the version doesn't match the manifest, or the section has no public bullets), or an HTML comment is left in the notes, the job fails.
+9. Creates a **draft** release named `Wendfold vX.Y.Z` (the package source once published) with exactly those four assets. Its notes are the public part of the `CHANGELOG.md` section for the version, printed by `scripts/release/generate-changelog.py --notes-out`: the section's headings and bullets as written, without the bullets tagged `<!-- internal -->` and without any HTML comment. The GitHub release download link, the install step, and `sha256sum -c SHA256SUMS-vX.Y.Z.txt` follow. If the section is missing, the job warns and the notes have only those three lines. If the script fails (for example, the version doesn't match the manifest, or the section has no public bullets), or an HTML comment is left in the notes, the job fails.
 
 The workflow never uploads anything to wendfold.com.
 
@@ -143,7 +143,7 @@ The job has `contents: write` and no other permissions. Re-running it only repla
 
 ## 6. Publish on wendfold.com
 
-wendfold.com is the primary download host and serves the Joomla update feed. The maintainer uploads the files and verifies them.
+wendfold.com serves the Joomla update feed and the download page; the package itself is downloaded from the GitHub release. The maintainer uploads the files and verifies them.
 
 Nothing goes on the site before the maintainer's explicit approval, even if the GitHub draft looks finished.
 
@@ -153,12 +153,12 @@ The site bundle (`wendfold-site-bundle-vX.Y.Z.zip` on the draft release, or the 
 
 | Bundle file | Served at | Expected Content-Type | On each release |
 |---|---|---|---|
-| `downloads/pkg_wendfold_vX.Y.Z.zip` | `https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip` | `application/zip` | new file, never overwritten |
+| `downloads/pkg_wendfold_vX.Y.Z.zip` | `https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip` (optional site copy; not the feed `<downloadurl>`) | `application/zip` | new file, never overwritten |
 | `downloads/SHA256SUMS-vX.Y.Z.txt` | `https://wendfold.com/downloads/SHA256SUMS-vX.Y.Z.txt` | `text/plain` | new file, never overwritten |
 | `updates/changelog.xml` | `https://wendfold.com/updates/changelog.xml` | `application/xml` or `text/xml` | replaced |
 | `updates/pkg_wendfold.xml` | `https://wendfold.com/updates/pkg_wendfold.xml` | `application/xml` or `text/xml` | replaced, **last** |
 
-These URLs must stay exactly as they are. They are the update server URL (`https://wendfold.com/updates/pkg_wendfold.xml`), which lives only in the `<updateservers>` entry in `pkg_wendfold/pkg_wendfold.xml`, and the `<downloadurl>` and `<changelogurl>` in the feed. The download landing page `https://wendfold.com/download` is website content and links to the ZIP above.
+These URLs must stay exactly as they are. They are the update server URL (`https://wendfold.com/updates/pkg_wendfold.xml`), which lives only in the `<updateservers>` entry in `pkg_wendfold/pkg_wendfold.xml`, and the `<downloadurl>` and `<changelogurl>` in the feed. The download landing page `https://wendfold.com/download` is website content and links to the GitHub release ZIP.
 
 ### Steps
 
@@ -170,7 +170,7 @@ These URLs must stay exactly as they are. They are the update server URL (`https
    (cd downloads && sha256sum -c SHA256SUMS-vX.Y.Z.txt)
    grep -o '<sha256>[^<]*</sha256>' updates/pkg_wendfold.xml          # must equal the hash above
    grep -o '<downloadurl[^>]*>[^<]*</downloadurl>' updates/pkg_wendfold.xml
-   # must be https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip
+   # must be https://github.com/wendfold/wendfold/releases/download/vX.Y.Z/pkg_wendfold_vX.Y.Z.zip
    ```
 
 2. The maintainer uploads with the hosting file manager or SFTP. Credentials and host details are kept outside this repository and never go in it. Upload as binary (SFTP does this; in a file manager, upload the files as they are and don't edit them in the browser). Upload in this order, so Joomla sites never see an update whose ZIP isn't there yet:
