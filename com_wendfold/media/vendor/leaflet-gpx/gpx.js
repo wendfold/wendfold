@@ -27,6 +27,13 @@
  */
 
 /*
+ * Local patches to leaflet-gpx 1.7.0. Reapply on upgrade; see PATCHES.md.
+ *
+ * - HTML-escape waypoint <name> and <desc> before bindPopup.
+ * - get_duration_string_iso replaces ' and " with global regular expressions.
+ */
+
+/*
  * Thanks to Pavel Shramov who provided the initial implementation and Leaflet
  * integration. Original code was at https://github.com/shramov/leaflet-plugins.
  *
@@ -129,7 +136,7 @@ L.GPX = L.FeatureGroup.extend({
 
   get_duration_string_iso: function(duration, hidems) {
     var s = this.get_duration_string(duration, hidems);
-    return s.replace("'",':').replace('"','');
+    return s.replace(/'/g, ':').replace(/"/g, '');
   },
 
   // Public methods
@@ -254,6 +261,20 @@ L.GPX = L.FeatureGroup.extend({
   },
 
   // Private methods
+  // Local patch: escape GPX text before it is placed in HTML.
+  _escape_html: function(value) {
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  },
+
   _merge_objs: function(a, b) {
     var _ = {};
     for (var attr in a) { _[attr] = a[attr]; }
@@ -443,7 +464,7 @@ L.GPX = L.FeatureGroup.extend({
           icon: symIcon,
           type: 'waypoint'
         });
-        marker.bindPopup("<b>" + name + "</b>" + (desc.length > 0 ? '<br>' + desc : '')).openPopup();
+        marker.bindPopup("<b>" + this._escape_html(name) + "</b>" + (desc.length > 0 ? '<br>' + this._escape_html(desc) : '')).openPopup();
         this.fire('addpoint', { point: marker, point_type: 'waypoint', element: el[i] });
         layers.push(marker);
       }
