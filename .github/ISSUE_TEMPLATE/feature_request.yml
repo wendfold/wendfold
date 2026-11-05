@@ -1,0 +1,82 @@
+name: Feature request
+description: Suggest an improvement or new capability for Wendfold.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. Please describe the problem first; the best solution may differ from the first one that comes to mind.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      placeholder: Members can see events as cards or a list, but there is no calendar view for scanning a month at a glance.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: users
+    attributes:
+      label: Who benefits most?
+      options:
+        - Public visitors
+        - Logged-in members
+        - Officers
+        - Site administrators
+        - Developers or maintainers
+        - Multiple groups
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Primary area
+      options:
+        - Front-end views
+        - Administrator UI
+        - Events, RSVP, or attendance
+        - Members, dues, or officers
+        - Reports or milestones
+        - Permissions or visibility
+        - Scheduled tasks
+        - User lifecycle integration
+        - Package, install, or update behavior
+        - Build, release, or documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Data, permission, or upgrade impact
+      description: Any schema changes, new permissions, or upgrade considerations you expect.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Mockups, screenshots, or workflow notes.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues first.
+          required: true

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+	<fieldset name="details" label="COM_WENDFOLD_MEMBERSHIP_TYPE_DETAILS">
+		<field name="id" type="hidden" filter="integer" />
+		<field
+			name="title"
+			type="text"
+			label="JGLOBAL_TITLE"
+			description="COM_WENDFOLD_LOOKUP_TITLE_DESC"
+			required="true"
+			maxlength="255"
+			filter="string"
+		/>
+		<field
+			name="import_code"
+			type="text"
+			label="COM_WENDFOLD_MEMBERSHIP_TYPE_IMPORT_CODE"
+			description="COM_WENDFOLD_MEMBERSHIP_TYPE_IMPORT_CODE_DESC"
+			maxlength="50"
+			filter="string"
+		/>
+		<field
+			name="exempt_from_renewal"
+			type="radio"
+			label="COM_WENDFOLD_MEMBERSHIP_TYPE_EXEMPT"
+			description="COM_WENDFOLD_MEMBERSHIP_TYPE_EXEMPT_DESC"
+			default="0"
+			filter="integer"
+			layout="joomla.form.field.radio.switcher"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="published"
+			type="list"
+			label="JSTATUS"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field
+			name="ordering"
+			type="number"
+			label="JGRID_HEADING_ORDERING"
+			default="0"
+			filter="integer"
+		/>
+	</fieldset>
+</form>

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://developer.joomla.org/schemas/json-schema/web_assets.json",
+  "name": "com_wendfold",
+  "version": "1.0.0",
+  "description": "Wendfold Chapter Management System",
+  "license": "GPL-2.0-or-later",
+  "assets": [
+    {
+      "name": "com_wendfold.admin",
+      "type": "style",
+      "uri": "com_wendfold/admin.css"
+    },
+    {
+      "name": "com_wendfold.site",
+      "type": "style",
+      "uri": "com_wendfold/site.css"
+    },
+    {
+      "name": "com_wendfold.event",
+      "type": "script",
+      "uri": "com_wendfold/event.js"
+    },
+    {
+      "name": "com_wendfold.rcattendance",
+      "type": "script",
+      "uri": "com_wendfold/rcattendance.js"
+    },
+    {
+      "name": "com_wendfold.confirm",
+      "type": "script",
+      "uri": "com_wendfold/confirm.js",
+      "attributes": {
+        "type": "module"
+      }
+    },
+    {
+      "name": "com_wendfold.leaflet",
+      "type": "style",
+      "uri": "media/com_wendfold/vendor/leaflet/leaflet.css",
+      "version": "1.9.4"
+    },
+    {
+      "name": "com_wendfold.leaflet",
+      "type": "script",
+      "uri": "media/com_wendfold/vendor/leaflet/leaflet.js",
+      "version": "1.9.4"
+    },
+    {
+      "name": "com_wendfold.leaflet-gpx",
+      "type": "script",
+      "uri": "media/com_wendfold/vendor/leaflet-gpx/gpx.js",
+      "version": "1.7.0",
+      "dependencies": [
+        "com_wendfold.leaflet"
+      ]
+    },
+    {
+      "name": "com_wendfold.routemap",
+      "type": "script",
+      "uri": "com_wendfold/routemap.js",
+      "dependencies": [
+        "com_wendfold.leaflet-gpx"
+      ]
+    },
+    {
+      "name": "com_wendfold.ksumap",
+      "type": "script",
+      "uri": "com_wendfold/ksumap.js",
+      "dependencies": [
+        "com_wendfold.leaflet"
+      ]
+    }
+  ]
+}

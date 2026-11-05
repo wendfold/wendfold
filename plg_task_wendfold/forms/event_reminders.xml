@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold
+  @subpackage  plg_task_wendfold
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+    <fields name="params">
+        <fieldset name="task_params"
+            label="PLG_TASK_WENDFOLD_FIELDSET_EVENT_REMINDERS_LABEL"
+            description="PLG_TASK_WENDFOLD_FIELDSET_EVENT_REMINDERS_DESC"
+        />
+    </fields>
+</form>

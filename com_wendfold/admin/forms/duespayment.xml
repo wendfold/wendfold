@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+    <fieldset name="details" label="COM_WENDFOLD_FIELDSET_PAYMENT_DETAILS">
+
+        <field name="profile_id" type="sql" label="COM_WENDFOLD_FIELD_MEMBER_LABEL" description="COM_WENDFOLD_FIELD_MEMBER_DESC" required="true" query="SELECT p.id AS value, u.name AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id WHERE p.published = 1 ORDER BY u.name ASC" key_field="value" value_field="text" />
+
+        <field name="year" type="list" label="COM_WENDFOLD_FIELD_YEAR_LABEL" description="COM_WENDFOLD_FIELD_YEAR_DESC" required="true" default="2026">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+        </field>
+
+        <field name="amount_paid" type="number" label="COM_WENDFOLD_FIELD_AMOUNT_LABEL" description="COM_WENDFOLD_FIELD_AMOUNT_DESC" step="0.01" min="0" required="true" filter="float" />
+
+        <field name="payment_date" type="calendar" label="COM_WENDFOLD_FIELD_PAYMENT_DATE_LABEL" description="COM_WENDFOLD_FIELD_PAYMENT_DATE_DESC" required="true" format="%Y-%m-%d" filter="date" />
+
+        <field name="payment_method" type="list" label="COM_WENDFOLD_FIELD_PAYMENT_METHOD_LABEL" description="COM_WENDFOLD_FIELD_PAYMENT_METHOD_DESC" default="Cash">
+            <option value="Cash">Cash</option>
+            <option value="Check">Check</option>
+            <option value="PayPal">PayPal</option>
+            <option value="Venmo">Venmo</option>
+            <option value="Zelle">Zelle</option>
+            <option value="Other">Other</option>
+        </field>
+
+        <field name="receipt_number" type="text" label="COM_WENDFOLD_FIELD_RECEIPT_NUMBER_LABEL" description="COM_WENDFOLD_FIELD_RECEIPT_NUMBER_DESC" size="30" maxlength="50" filter="string" hint="CHK-001, TXN-12345, etc." />
+
+        <field name="notes" type="textarea" label="COM_WENDFOLD_FIELD_NOTES_LABEL" description="COM_WENDFOLD_FIELD_PAYMENT_NOTES_DESC" rows="3" cols="50" maxlength="255" filter="string" />
+
+    </fieldset>
+
+    <fieldset name="hidden">
+        <field name="id" type="hidden" filter="integer" default="0" />
+    </fieldset>
+</form>

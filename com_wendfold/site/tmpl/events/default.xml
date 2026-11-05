@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<metadata>
+    <layout title="COM_WENDFOLD_EVENTS_MENU_TITLE">
+        <message>
+            <![CDATA[COM_WENDFOLD_EVENTS_MENU_DESC]]>
+        </message>
+    </layout>
+</metadata>

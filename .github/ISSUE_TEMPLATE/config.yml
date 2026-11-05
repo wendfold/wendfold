@@ -1,0 +1,9 @@
+# Disables blank issues and points security reports to private reporting.
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability (private)
+    url: https://github.com/wendfold/wendfold/security/advisories/new
+    about: Please do NOT open a public issue for security problems. Use GitHub private vulnerability reporting, or email security@wendfold.com; see SECURITY.md.
+  - name: General questions and support
+    url: https://wendfold.com/support
+    about: Installation help and other questions. Email support@wendfold.com.

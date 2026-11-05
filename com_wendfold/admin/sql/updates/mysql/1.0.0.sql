@@ -1,0 +1,14 @@
+-- ============================================================
+-- Wendfold -- Chapter Management System
+-- Schema version baseline
+-- Version: 1.0.0
+--
+-- Copyright (C) 2026 Adan Lozano
+-- GNU General Public License version 2 or later; see LICENSE.txt
+--
+-- 1.0.0 is the first release. Fresh installs create the full schema,
+-- including every #__wendfold_* table, from
+-- sql/install.mysql.utf8.sql. This file has no statements. Joomla
+-- records its filename as the schema version in #__schemas so
+-- System > Maintenance > Database can track the component.
+-- ============================================================

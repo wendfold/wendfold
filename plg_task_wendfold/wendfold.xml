@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="task" method="upgrade">
+    <name>Task - Wendfold</name>
+    <creationDate>2026-11-02</creationDate>
+    <author>Adan Lozano</author>
+    <authorEmail>support@wendfold.com</authorEmail>
+    <authorUrl>https://wendfold.com</authorUrl>
+    <copyright>Copyright (C) 2026 Adan Lozano</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+    <version>1.0.0</version>
+    <description>Companion plugin for Wendfold. Adds scheduled tasks for lapsed-member cleanup, renewal reminders, event reminders, and award recompute.</description>
+    <element>wendfold</element>
+    <namespace path="src">Wendfold\Plugin\Task\Wendfold</namespace>
+
+    <files>
+        <filename plugin="wendfold">wendfold.php</filename>
+        <filename>LICENSE.txt</filename>
+        <folder>forms</folder>
+        <folder>services</folder>
+        <folder>src</folder>
+    </files>
+
+    <languages folder="language">
+        <language tag="en-GB">en-GB/plg_task_wendfold.ini</language>
+        <language tag="en-GB">en-GB/plg_task_wendfold.sys.ini</language>
+    </languages>
+</extension>

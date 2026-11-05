@@ -1,0 +1,40 @@
+# Build output (written by build/build_release.py)
+/build/dist/*
+!/build/dist/.gitignore
+/build/staging/*
+!/build/staging/.gitignore
+/pkg_wendfold/constituents/*
+!/pkg_wendfold/constituents/.gitignore
+
+# Python bytecode from build and release scripts
+__pycache__/
+*.py[cod]
+
+# Local tool configuration and caches
+/phpcs.xml
+/.phpcs-cache
+/.phpcs.cache
+/vendor/
+/composer.phar
+/.php-cs-fixer.cache
+/.phpunit.cache/
+/.phpunit.result.cache
+
+# Secrets and local environment files (never commit these)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Release scratch (artifacts belong on GitHub Releases, not in git)
+*.zip
+SHA256SUMS*.txt
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+Thumbs.db

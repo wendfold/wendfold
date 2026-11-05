@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+
+    <fieldset name="details" label="COM_WENDFOLD_FIELDSET_DETAILS">
+
+        <field name="name" type="text" label="COM_WENDFOLD_FIELD_LOCATION_NAME_LABEL" description="COM_WENDFOLD_FIELD_LOCATION_NAME_DESC" size="50" maxlength="255" required="true" filter="string" hint="COM_WENDFOLD_FIELD_LOCATION_NAME_HINT" />
+
+        <field name="image" type="media" label="COM_WENDFOLD_FIELD_LOCATION_IMAGE_LABEL" description="COM_WENDFOLD_FIELD_LOCATION_IMAGE_DESC" directory="wendfold/locations" filter="raw" />
+
+        <field name="location_type" type="list" label="COM_WENDFOLD_FIELD_LOCATION_TYPE_LABEL" description="COM_WENDFOLD_FIELD_LOCATION_TYPE_DESC" default="1">
+            <option value="1">COM_WENDFOLD_LOCATION_TYPE_STOP</option>
+            <option value="2">COM_WENDFOLD_LOCATION_TYPE_VENUE</option>
+            <option value="3">COM_WENDFOLD_LOCATION_TYPE_BOTH</option>
+        </field>
+
+        <field name="address" type="text" label="COM_WENDFOLD_FIELD_ADDRESS_LABEL" description="COM_WENDFOLD_FIELD_ADDRESS_DESC" size="50" maxlength="255" filter="string" />
+
+        <field name="city" type="text" label="COM_WENDFOLD_FIELD_CITY_LABEL" description="COM_WENDFOLD_FIELD_CITY_DESC" size="30" maxlength="100" required="true" filter="string" />
+
+        <field name="state" type="text" label="COM_WENDFOLD_FIELD_STATE_LABEL" description="COM_WENDFOLD_FIELD_STATE_DESC" size="3" maxlength="2" required="true" filter="string" hint="COM_WENDFOLD_FIELD_STATE_HINT" />
+
+        <field name="zip" type="text" label="COM_WENDFOLD_FIELD_ZIP_LABEL" description="COM_WENDFOLD_FIELD_ZIP_DESC" size="10" maxlength="10" filter="string" />
+
+        <field name="lat" type="number" label="COM_WENDFOLD_FIELD_LAT_LABEL" description="COM_WENDFOLD_FIELD_LAT_DESC" step="0.0000001" filter="float" hint="COM_WENDFOLD_FIELD_LAT_HINT" />
+
+        <field name="lng" type="number" label="COM_WENDFOLD_FIELD_LNG_LABEL" description="COM_WENDFOLD_FIELD_LNG_DESC" step="0.0000001" filter="float" hint="COM_WENDFOLD_FIELD_LNG_HINT" />
+
+        <field name="notes" type="textarea" label="COM_WENDFOLD_FIELD_NOTES_LABEL" description="COM_WENDFOLD_FIELD_LOCATION_NOTES_DESC" rows="4" cols="40" filter="string" hint="COM_WENDFOLD_FIELD_LOCATION_NOTES_HINT" />
+
+        <field name="is_default" type="radio" label="COM_WENDFOLD_FIELD_IS_DEFAULT_LABEL" description="COM_WENDFOLD_FIELD_IS_DEFAULT_DESC" default="0" class="btn-group btn-group-yesno">
+            <option value="1">JYES</option>
+            <option value="0">JNO</option>
+        </field>
+
+        <field name="published" type="list" label="JSTATUS" description="JFIELD_PUBLISHED_DESC" default="1">
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+
+    </fieldset>
+
+    <fieldset name="hidden">
+        <field name="id" type="hidden" filter="integer" default="0" />
+    </fieldset>
+
+</form>

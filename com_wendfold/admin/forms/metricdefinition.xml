@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<form>
+	<fieldset name="details" label="COM_WENDFOLD_METRIC_DETAILS">
+		<field name="id" type="hidden" filter="integer" />
+		<field
+			name="metric_key"
+			type="text"
+			label="COM_WENDFOLD_METRIC_KEY_LABEL"
+			description="COM_WENDFOLD_METRIC_KEY_DESC"
+			required="true"
+			maxlength="50"
+			filter="string"
+		/>
+		<field
+			name="title"
+			type="text"
+			label="JGLOBAL_TITLE"
+			description="COM_WENDFOLD_LOOKUP_TITLE_DESC"
+			required="true"
+			maxlength="255"
+			filter="string"
+		/>
+		<field
+			name="unit_label"
+			type="text"
+			label="COM_WENDFOLD_METRIC_UNIT_LABEL"
+			description="COM_WENDFOLD_METRIC_UNIT_DESC"
+			maxlength="100"
+			filter="string"
+		/>
+		<field
+			name="decimals"
+			type="list"
+			label="COM_WENDFOLD_METRIC_DECIMALS_LABEL"
+			default="0"
+			filter="integer"
+		>
+			<option value="0">0</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+		</field>
+		<field
+			name="aggregation"
+			type="list"
+			label="COM_WENDFOLD_METRIC_AGGREGATION_LABEL"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">COM_WENDFOLD_METRIC_AGGREGATION_SUM</option>
+			<option value="2">COM_WENDFOLD_METRIC_AGGREGATION_COUNT</option>
+			<option value="3">COM_WENDFOLD_METRIC_AGGREGATION_MAX</option>
+		</field>
+		<field
+			name="allow_event_credit"
+			type="radio"
+			label="COM_WENDFOLD_METRIC_ALLOW_EVENT_LABEL"
+			default="1"
+			filter="integer"
+			layout="joomla.form.field.radio.switcher"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="default_event_credit"
+			type="text"
+			label="COM_WENDFOLD_METRIC_DEFAULT_CREDIT_LABEL"
+			description="COM_WENDFOLD_METRIC_DEFAULT_CREDIT_DESC"
+			filter="string"
+		/>
+		<field
+			name="allow_member_entry"
+			type="radio"
+			label="COM_WENDFOLD_METRIC_ALLOW_MEMBER_LABEL"
+			default="0"
+			filter="integer"
+			layout="joomla.form.field.radio.switcher"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="member_entry_needs_approval"
+			type="radio"
+			label="COM_WENDFOLD_METRIC_NEEDS_APPROVAL_LABEL"
+			default="0"
+			filter="integer"
+			layout="joomla.form.field.radio.switcher"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="show_on_dashboard"
+			type="radio"
+			label="COM_WENDFOLD_METRIC_DASHBOARD_LABEL"
+			default="1"
+			filter="integer"
+			layout="joomla.form.field.radio.switcher"
+		>
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		<field
+			name="published"
+			type="list"
+			label="JSTATUS"
+			default="1"
+			filter="integer"
+		>
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+		</field>
+		<field
+			name="ordering"
+			type="number"
+			label="JGRID_HEADING_ORDERING"
+			default="0"
+			filter="integer"
+		/>
+	</fieldset>
+</form>

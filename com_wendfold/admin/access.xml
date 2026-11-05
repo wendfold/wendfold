@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<access component="com_wendfold">
+
+    <!-- ============================================================
+         Wendfold ACL Permissions
+         
+         These permissions appear in the Joomla admin under
+         Components > Wendfold > Options > Permissions tab.
+         
+         They control what each user group can do within
+         Wendfold  -  on top of Joomla's global permissions.
+         ============================================================ -->
+
+    <section name="component">
+        <action name="core.admin"    title="JACTION_ADMIN"    description="JACTION_ADMIN_COMPONENT_DESC" />
+        <action name="core.options"  title="JACTION_OPTIONS"  description="JACTION_OPTIONS_COMPONENT_DESC" />
+        <action name="core.manage"   title="JACTION_MANAGE"   description="JACTION_MANAGE_COMPONENT_DESC" />
+        <action name="core.create"   title="JACTION_CREATE"   description="JACTION_CREATE_COMPONENT_DESC" />
+        <action name="core.delete"   title="JACTION_DELETE"   description="JACTION_DELETE_COMPONENT_DESC" />
+        <action name="core.edit"     title="JACTION_EDIT"     description="JACTION_EDIT_COMPONENT_DESC" />
+        <action name="core.edit.own" title="JACTION_EDITOWN"  description="JACTION_EDITOWN_COMPONENT_DESC" />
+        <action name="core.edit.state" title="JACTION_EDITSTATE" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+        <!--
+            wendfold.emailblast is denied by inheritance for every group that is
+            not listed on the component asset. Install and update seed Allow for
+            the Super Users and Administrator groups only. See script.php.
+        -->
+        <action name="wendfold.emailblast" title="COM_WENDFOLD_ACTION_EMAILBLAST" description="COM_WENDFOLD_ACTION_EMAILBLAST_DESC" />
+        <action name="wendfold.logactivity" title="COM_WENDFOLD_ACTION_LOGACTIVITY" description="COM_WENDFOLD_ACTION_LOGACTIVITY_DESC" />
+    </section>
+
+</access>

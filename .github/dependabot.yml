@@ -1,0 +1,31 @@
+# Dependabot version updates.
+# Tracks GitHub Actions and the Composer dev tools (composer.json and
+# composer.lock: PHP_CodeSniffer and joomla/coding-standards).
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    ignore:
+      # joomla/coding-standards 3.0.0-alpha requires PHP_CodeSniffer ^3.4.
+      - dependency-name: "squizlabs/php_codesniffer"
+        update-types: ["version-update:semver-major"]

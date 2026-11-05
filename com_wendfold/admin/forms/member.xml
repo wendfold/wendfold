@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<!--
+    Wendfold - Member Edit Form
+    admin/forms/member.xml
+
+    Phase 11 follow-up: added chapter_join_date DATE field (v1.0.0 schema).
+    All form fields map directly to #__wendfold_profiles columns.
+
+    Naming convention: no underscores in the XML filename per Joomla 6 convention.
+    This file MUST be named "member.xml" (singular) to match MemberModel::getForm().
+-->
+<form>
+
+    <!-- ============================================================
+         FIELDSET: Core Chapter Membership
+    ============================================================ -->
+    <fieldset name="membership" label="COM_WENDFOLD_FIELDSET_MEMBERSHIP">
+
+        <field
+            name="id"
+            type="hidden"
+        />
+
+        <field
+            name="user_id"
+            type="user"
+            label="COM_WENDFOLD_FIELD_USER_LABEL"
+            description="COM_WENDFOLD_FIELD_USER_DESC"
+            required="true"
+        />
+
+        <field
+            name="preferred_name"
+            type="text"
+            label="COM_WENDFOLD_FIELD_PREFERRED_NAME_LABEL"
+            description="COM_WENDFOLD_FIELD_PREFERRED_NAME_DESC"
+            hint="COM_WENDFOLD_FIELD_PREFERRED_NAME_HINT"
+            maxlength="100"
+            required="false"
+        />
+
+        <field
+            name="member_number"
+            type="text"
+            label="COM_WENDFOLD_FIELD_MEMBER_NUMBER_LABEL"
+            description="COM_WENDFOLD_FIELD_MEMBER_NUMBER_DESC"
+            hint="COM_WENDFOLD_FIELD_MEMBER_NUMBER_HINT"
+            size="20"
+            maxlength="30"
+            required="false"
+        />
+
+        <field
+            name="membership_type_id"
+            type="lookup"
+            lookup="membershiptype"
+            addfieldprefix="Wendfold\Component\Wendfold\Administrator\Field"
+            label="COM_WENDFOLD_FIELD_MEMBERSHIP_TYPE_LABEL"
+            description="COM_WENDFOLD_FIELD_MEMBERSHIP_TYPE_DESC"
+            filter="integer"
+        />
+
+        <field
+            name="member_since"
+            type="calendar"
+            label="COM_WENDFOLD_FIELD_MEMBER_SINCE_LABEL"
+            description="COM_WENDFOLD_FIELD_MEMBER_SINCE_DESC"
+            format="%Y-%m-%d"
+            filter="date"
+            required="false"
+        />
+
+        <field
+            name="chapter_join_date"
+            type="calendar"
+            label="COM_WENDFOLD_FIELD_CHAPTER_JOIN_DATE_LABEL"
+            description="COM_WENDFOLD_FIELD_CHAPTER_JOIN_DATE_DESC"
+            format="%Y-%m-%d"
+            filter="date"
+            required="false"
+        />
+
+        <field
+            name="renewal_date"
+            type="calendar"
+            label="COM_WENDFOLD_FIELD_RENEWAL_DATE_LABEL"
+            description="COM_WENDFOLD_FIELD_RENEWAL_DATE_DESC"
+            format="%Y-%m-%d"
+            filter="date"
+            required="false"
+        />
+
+        <field
+            name="renewal_reminders_optout"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_RENEWAL_REMINDERS_OPTOUT_LABEL"
+            description="COM_WENDFOLD_FIELD_RENEWAL_REMINDERS_OPTOUT_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+            filter="integer"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field
+            name="published"
+            type="list"
+            label="JSTATUS"
+            default="1"
+        >
+            <option value="1">JPUBLISHED</option>
+            <option value="0">JUNPUBLISHED</option>
+        </field>
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Dues
+    ============================================================ -->
+    <fieldset name="dues" label="COM_WENDFOLD_FIELDSET_DUES">
+
+        <field
+            name="dues_paid"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_DUES_PAID_LABEL"
+            description="COM_WENDFOLD_FIELD_DUES_PAID_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+            filter="integer"
+        >
+			<!-- Order matters for the switcher UI: 0 (off) then 1 (on) -->
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+        </field>
+
+        <field
+            name="dues_paid_date"
+            type="calendar"
+            label="COM_WENDFOLD_FIELD_DUES_PAID_DATE_LABEL"
+            description="COM_WENDFOLD_FIELD_DUES_PAID_DATE_DESC"
+            format="%Y-%m-%d"
+            filter="date"
+            required="false"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Waiver
+    ============================================================ -->
+    <fieldset name="waiver" label="COM_WENDFOLD_FIELDSET_WAIVER">
+
+        <field
+            name="waiver_signed"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_WAIVER_SIGNED_LABEL"
+            description="COM_WENDFOLD_FIELD_WAIVER_SIGNED_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+            filter="integer"
+        >
+			<!-- Order matters for the switcher UI: 0 (off) then 1 (on) -->
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+        </field>
+
+        <field
+            name="waiver_signed_date"
+            type="calendar"
+            label="COM_WENDFOLD_FIELD_WAIVER_SIGNED_DATE_LABEL"
+            description="COM_WENDFOLD_FIELD_WAIVER_SIGNED_DATE_DESC"
+            format="%Y-%m-%d"
+            filter="date"
+            required="false"
+        />
+
+        <field
+            name="waiver_version"
+            type="text"
+            label="COM_WENDFOLD_FIELD_WAIVER_VERSION_LABEL"
+            description="COM_WENDFOLD_FIELD_WAIVER_VERSION_DESC"
+            size="10"
+            maxlength="20"
+            filter="string"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: National Verification
+    ============================================================ -->
+    <fieldset name="national" label="COM_WENDFOLD_FIELDSET_NATIONAL">
+
+        <field
+            name="national_verified"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_NATIONAL_VERIFIED_LABEL"
+            description="COM_WENDFOLD_FIELD_NATIONAL_VERIFIED_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+            filter="integer"
+        >
+			<!-- Order matters for the switcher UI: 0 (off) then 1 (on) -->
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+        </field>
+
+        <field
+            name="national_verified_date"
+            type="calendar"
+            label="COM_WENDFOLD_FIELD_NATIONAL_VERIFIED_DATE_LABEL"
+            description="COM_WENDFOLD_FIELD_NATIONAL_VERIFIED_DATE_DESC"
+            format="%Y-%m-%d"
+            filter="date"
+            required="false"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Ride Roles
+    ============================================================ -->
+    <fieldset name="ride_roles" label="COM_WENDFOLD_FIELDSET_RIDE_ROLES">
+
+        <field
+            name="is_road_captain"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_IS_ROAD_CAPTAIN_LABEL"
+            description="COM_WENDFOLD_FIELD_IS_ROAD_CAPTAIN_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+            filter="integer"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field
+            name="is_road_crew"
+            type="radio"
+            label="COM_WENDFOLD_FIELD_IS_ROAD_CREW_LABEL"
+            description="COM_WENDFOLD_FIELD_IS_ROAD_CREW_DESC"
+            default="0"
+            layout="joomla.form.field.radio.switcher"
+            filter="integer"
+        >
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Emergency Contact
+    ============================================================ -->
+    <fieldset name="emergency" label="COM_WENDFOLD_FIELDSET_EMERGENCY">
+
+        <field
+            name="emergency_name"
+            type="text"
+            label="COM_WENDFOLD_FIELD_EMERGENCY_NAME_LABEL"
+            description="COM_WENDFOLD_FIELD_EMERGENCY_NAME_DESC"
+            size="100"
+            maxlength="100"
+        />
+
+        <field
+            name="emergency_phone"
+            type="tel"
+            label="COM_WENDFOLD_FIELD_EMERGENCY_PHONE_LABEL"
+            description="COM_WENDFOLD_FIELD_EMERGENCY_PHONE_DESC"
+            hint="COM_WENDFOLD_FIELD_EMERGENCY_PHONE_HINT"
+            size="30"
+            maxlength="30"
+        />
+
+        <field
+            name="emergency_relation"
+            type="text"
+            label="COM_WENDFOLD_FIELD_EMERGENCY_RELATION_LABEL"
+            description="COM_WENDFOLD_FIELD_EMERGENCY_RELATION_DESC"
+            hint="COM_WENDFOLD_FIELD_EMERGENCY_RELATION_HINT"
+            size="50"
+            maxlength="50"
+        />
+
+    </fieldset>
+
+    <!-- ============================================================
+         FIELDSET: Profile Details
+    ============================================================ -->
+    <fieldset name="profile" label="COM_WENDFOLD_FIELDSET_PROFILE">
+
+        <field
+            name="shirt_size"
+            type="list"
+            label="COM_WENDFOLD_FIELD_SHIRT_SIZE_LABEL"
+            description="COM_WENDFOLD_FIELD_SHIRT_SIZE_DESC"
+            default=""
+        >
+            <option value="">COM_WENDFOLD_FIELD_SHIRT_SIZE_SELECT</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+            <option value="2XL">2XL</option>
+            <option value="3XL">3XL</option>
+            <option value="4XL">4XL</option>
+        </field>
+
+        <field
+            name="sponsor_id"
+            type="sql"
+            label="COM_WENDFOLD_FIELD_SPONSOR_LABEL"
+            description="COM_WENDFOLD_FIELD_SPONSOR_DESC"
+            query="SELECT p.id AS value, CONCAT(u.name, ' (', p.member_number, ')') AS text FROM #__wendfold_profiles AS p INNER JOIN #__users AS u ON u.id = p.user_id WHERE p.published = 1 ORDER BY u.name ASC"
+            key_field="value"
+            value_field="text"
+            header="COM_WENDFOLD_FIELD_SPONSOR_NONE"
+            required="false"
+        />
+
+        <field
+            name="notes"
+            type="textarea"
+            label="COM_WENDFOLD_FIELD_NOTES_LABEL"
+            rows="5"
+            cols="60"
+            filter="string"
+        />
+
+    </fieldset>
+
+</form>

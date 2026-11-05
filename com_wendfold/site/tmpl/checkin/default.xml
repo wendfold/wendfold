@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  @package     Wendfold (com_wendfold)
+  @copyright   Copyright (C) 2026 Adan Lozano
+  @license     GNU General Public License version 2 or later; see LICENSE.txt
+-->
+<metadata>
+    <layout title="COM_WENDFOLD_CHECKIN_MENU_TITLE" description="COM_WENDFOLD_CHECKIN_MENU_DESC">
+        <help key="menu-item-component" />
+        <message><![CDATA[COM_WENDFOLD_CHECKIN_MENU_DESC]]></message>
+    </layout>
+</metadata>

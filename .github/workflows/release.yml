@@ -1,0 +1,388 @@
+# Release workflow for Wendfold.
+#
+# Trigger: push of a tag vX.Y.Z (optionally vX.Y.Z-rc.N), created per RELEASING.md.
+# Result:  1. A site-upload bundle for wendfold.com (the primary download host),
+#             uploaded as the artifact "wendfold-site-bundle-vX.Y.Z" and also
+#             attached to the draft release as wendfold-site-bundle-vX.Y.Z.zip.
+#             It contains ONLY these two top-level folders:
+#               downloads/pkg_wendfold_vX.Y.Z.zip
+#               downloads/SHA256SUMS-vX.Y.Z.txt
+#               updates/pkg_wendfold.xml   (<sha256> filled in)
+#               updates/changelog.xml      (only if it exists in the tree)
+#             The bundle has no child ZIPs and no unversioned SHA256SUMS.txt.
+#          2. A DRAFT GitHub release (a mirror) with ONLY these assets:
+#               pkg_wendfold_vX.Y.Z.zip
+#               SHA256SUMS-vX.Y.Z.txt      (package-only; the same file as
+#                                           downloads/ in the bundle)
+#               pkg_wendfold.xml           (<sha256> filled in)
+#               wendfold-site-bundle-vX.Y.Z.zip
+#             Child ZIPs (com_wendfold_*, plg_user_wendfold_*,
+#             plg_task_wendfold_*, plg_privacy_wendfold_*) are NEVER release assets. They ship only
+#             inside the package ZIP under constituents/. The "Guard" step
+#             fails the job if anything else is staged for upload.
+#          The release is NEVER published automatically. Nothing is uploaded to
+#          wendfold.com by this workflow (see RELEASING.md, section 6), and
+#          nothing is committed back to the repo.
+#
+# The <downloadurl> of the matching <update> entry must be exactly
+#   https://wendfold.com/downloads/pkg_wendfold_vX.Y.Z.zip
+#
+# Actions are pinned to full commit SHAs (see ci.yml for versions).
+#   actions/checkout        v7.0.1 3d3c42e5aac5ba805825da76410c181273ba90b1
+#   actions/upload-artifact v7.0.2 cf430e030ddbb5b0abf93d22962f4752f3646cd9
+#
+# PHP: every PHP step of a release runs in the reusable ci.yml job below
+# (setup-php with update=true plus the "PHP security floor" check), and the
+# draft release job needs it. The release job itself runs no PHP (the build is
+# python3 build/build_release.py), so it does not set up PHP. If a PHP step is
+# ever added here, set up PHP and copy the floor check from ci.yml first: the
+# runner's preinstalled PHP is not updated and can be below the floor.
+
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+# Nothing by default; each job asks for what it needs.
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  release:
+    name: Draft release
+    needs: ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write # create the draft release and upload assets; nothing else
+    env:
+      TAG: ${{ github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      UPDATE_XML: updates/pkg_wendfold.xml
+      CHANGELOG_XML: updates/changelog.xml
+      DOWNLOAD_BASE: https://wendfold.com/downloads
+      BUNDLE_DIR: build/site-bundle
+      # The only directory the draft release uploads from (see the Guard step).
+      STAGE_DIR: build/release-upload
+
+    steps:
+      - name: Check out tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate tag
+        id: tag
+        run: |
+          set -euo pipefail
+          if [[ ! "$TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag '$TAG' is not vMAJOR.MINOR.PATCH[-prerelease]"; exit 1
+          fi
+          version="${TAG#v}"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          if [[ -n "${BASH_REMATCH[2]}" ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+
+          # RELEASING.md requires a signed, annotated tag. Lightweight tags fail;
+          # an annotated tag GitHub can't verify only produces a warning.
+          ref_type=$(gh api "repos/${GH_REPO}/git/ref/tags/${TAG}" --jq .object.type)
+          if [[ "$ref_type" != "tag" ]]; then
+            echo "::error::$TAG is a lightweight tag; create a signed annotated tag (git tag -s)"; exit 1
+          fi
+          tag_sha=$(gh api "repos/${GH_REPO}/git/ref/tags/${TAG}" --jq .object.sha)
+          verified=$(gh api "repos/${GH_REPO}/git/tags/${tag_sha}" --jq .verification.verified)
+          reason=$(gh api "repos/${GH_REPO}/git/tags/${tag_sha}" --jq .verification.reason)
+          echo "Tag signature verified by GitHub: ${verified} (${reason})"
+          [[ "$verified" == "true" ]] || echo "::warning::Tag $TAG signature not verified by GitHub (${reason})"
+
+      - name: Check manifest versions match the tag
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          for m in pkg_wendfold/pkg_wendfold.xml com_wendfold/wendfold.xml \
+                   plg_user_wendfold/wendfold.xml plg_task_wendfold/wendfold.xml \
+                   plg_privacy_wendfold/wendfold.xml; do
+            v=$(python3 -c 'import sys,xml.etree.ElementTree as E; print((E.parse(sys.argv[1]).getroot().findtext("version") or "").strip())' "$m")
+            echo "${m}: ${v}"
+            [[ "$v" == "$VERSION" ]] || { echo "::error file=${m}::manifest version ${v} != tag version ${VERSION}"; exit 1; }
+          done
+          grep -qE "^## \[${VERSION//./\\.}\]" CHANGELOG.md \
+            || echo "::warning::CHANGELOG.md has no '## [${VERSION}]' section"
+
+      - name: Check package downloadurl points at wendfold.com
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [[ ! -f "$UPDATE_XML" ]]; then
+            echo "::error file=${UPDATE_XML}::${UPDATE_XML} does not exist in this tag. It must be committed (with an <update> entry for ${VERSION}, its <downloadurl>, and <version>) before tagging. See RELEASING.md."
+            exit 1
+          fi
+          expected="${DOWNLOAD_BASE}/pkg_wendfold_v${VERSION}.zip"
+          actual=$(python3 - "$UPDATE_XML" "$VERSION" <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+          path, version = sys.argv[1], sys.argv[2]
+          entries = [u for u in ET.parse(path).getroot().iter('update')
+                     if (u.findtext('version') or '').strip() == version]
+          if len(entries) != 1:
+              sys.exit(f'expected exactly one <update> with <version>{version}</version>, found {len(entries)}')
+          urls = entries[0].findall('downloads/downloadurl')
+          if len(urls) != 1:
+              sys.exit(f'expected exactly one <downloads><downloadurl> in the {version} entry, found {len(urls)}')
+          print((urls[0].text or '').strip())
+          PY
+          ) || { echo "::error file=${UPDATE_XML}::could not read the <downloadurl> for ${VERSION} (see message above)"; exit 1; }
+          if [[ "$actual" != "$expected" ]]; then
+            echo "::error file=${UPDATE_XML}::<downloadurl> for ${VERSION} must be exactly ${expected} but is '${actual}'. wendfold.com is the primary download host; fix updates/pkg_wendfold.xml and re-tag."
+            exit 1
+          fi
+          echo "downloadurl OK: ${actual}"
+
+      - name: Build release ZIPs
+        run: python3 build/build_release.py
+
+      - name: Verify SHA256SUMS
+        working-directory: build/dist
+        run: sha256sum -c --strict SHA256SUMS.txt
+
+      - name: Print sha256 of each ZIP (for update XMLs)
+        working-directory: build/dist
+        run: |
+          set -euo pipefail
+          {
+            echo "### SHA-256 for update XMLs (${TAG})"
+            echo
+            echo '| File | sha256 |'
+            echo '| --- | --- |'
+          } >> "$GITHUB_STEP_SUMMARY"
+          for z in *.zip; do
+            h=$(sha256sum "$z" | cut -d' ' -f1)
+            echo "${z}  sha256=${h}"
+            echo "| \`${z}\` | \`${h}\` |" >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Write sha256 into the package update XML
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          if [[ ! -f "$UPDATE_XML" ]]; then
+            echo "::error file=${UPDATE_XML}::${UPDATE_XML} does not exist in this tag. It must be committed (with an <update> entry for ${VERSION}, its <downloadurl>, and <version>) before tagging. See RELEASING.md."
+            exit 1
+          fi
+          mkdir -p build/release-assets
+          cp "$UPDATE_XML" build/release-assets/pkg_wendfold.xml
+          python3 scripts/release/set-update-sha256.py \
+            --xml build/release-assets/pkg_wendfold.xml \
+            --version "$VERSION" \
+            --zip "build/dist/pkg_wendfold_v${VERSION}.zip"
+          echo "----- pkg_wendfold.xml (release asset; NOT committed) -----"
+          cat build/release-assets/pkg_wendfold.xml
+
+      - name: Build site-upload bundle (downloads/ + updates/ only)
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          zip_name="pkg_wendfold_v${VERSION}.zip"
+          sums_name="SHA256SUMS-v${VERSION}.txt"
+          rm -rf "$BUNDLE_DIR"
+          mkdir -p "$BUNDLE_DIR/downloads" "$BUNDLE_DIR/updates"
+
+          cp "build/dist/${zip_name}" "$BUNDLE_DIR/downloads/${zip_name}"
+          (cd "$BUNDLE_DIR/downloads" && sha256sum "$zip_name" > "$sums_name" && sha256sum -c "$sums_name")
+          # The per-version sums line must match the build's SHA256SUMS.txt entry.
+          grep -qxF "$(cat "$BUNDLE_DIR/downloads/${sums_name}")" build/dist/SHA256SUMS.txt \
+            || { echo "::error::${sums_name} does not match build/dist/SHA256SUMS.txt"; exit 1; }
+
+          cp build/release-assets/pkg_wendfold.xml "$BUNDLE_DIR/updates/pkg_wendfold.xml"
+          if [[ -f "$CHANGELOG_XML" ]]; then
+            cp "$CHANGELOG_XML" "$BUNDLE_DIR/updates/changelog.xml"
+          fi
+
+          # The update XML in the bundle must carry the hash of the bundled ZIP.
+          zip_sha=$(cut -d' ' -f1 "$BUNDLE_DIR/downloads/${sums_name}")
+          xml_sha=$(python3 - "$BUNDLE_DIR/updates/pkg_wendfold.xml" "$VERSION" <<'PY'
+          import sys
+          import xml.etree.ElementTree as ET
+          path, version = sys.argv[1], sys.argv[2]
+          u = [u for u in ET.parse(path).getroot().iter('update') if (u.findtext('version') or '').strip() == version][0]
+          print(' '.join((e.text or '').strip() for e in u.findall('sha256')))
+          PY
+          )
+          [[ "$xml_sha" == "$zip_sha" ]] || { echo "::error::bundle updates/pkg_wendfold.xml <sha256> '${xml_sha}' != ${zip_sha}"; exit 1; }
+
+          # Exact layout: only downloads/ and updates/ at the top, only the expected files.
+          top=$(cd "$BUNDLE_DIR" && find . -mindepth 1 -maxdepth 1 -printf '%P\n' | LC_ALL=C sort | paste -sd' ')
+          [[ "$top" == "downloads updates" ]] || { echo "::error::bundle top level must be exactly 'downloads updates', got '${top}'"; exit 1; }
+          expected=$( { printf '%s\n' "downloads/${zip_name}" "downloads/${sums_name}" "updates/pkg_wendfold.xml"
+                        if [[ -f "$CHANGELOG_XML" ]]; then echo "updates/changelog.xml"; fi; } | LC_ALL=C sort)
+          actual=$(cd "$BUNDLE_DIR" && find . -mindepth 1 ! -type d -printf '%P\n' | LC_ALL=C sort)
+          if [[ "$actual" != "$expected" ]]; then
+            echo "::error::site bundle layout mismatch"; diff <(echo "$expected") <(echo "$actual") || true; exit 1
+          fi
+
+          (cd "$BUNDLE_DIR" && zip -qrX "../wendfold-site-bundle-v${VERSION}.zip" downloads updates)
+          echo "----- site bundle (upload to wendfold.com only after the maintainer's approval) -----"
+          (cd "$BUNDLE_DIR" && find . -mindepth 1 -printf '%y %P\n' | LC_ALL=C sort -k2)
+          {
+            echo
+            echo "### Site-upload bundle (${TAG})"
+            echo
+            echo "Primary download: \`${DOWNLOAD_BASE}/${zip_name}\` (sha256 \`${zip_sha}\`)"
+            echo
+            echo '```'
+            (cd "$BUNDLE_DIR" && find . -mindepth 1 ! -type d -printf '%P\n' | LC_ALL=C sort)
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload site bundle artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: wendfold-site-bundle-v${{ steps.tag.outputs.version }}
+          path: build/site-bundle/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Prepare release notes
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          # Public notes only: generate-changelog.py prints the version's
+          # CHANGELOG.md section without the bullets tagged <!-- internal -->
+          # and without any HTML comment (see RELEASING.md, section 2b).
+          if grep -qE "^## \[${VERSION//./\\.}\]" CHANGELOG.md; then
+            python3 scripts/release/generate-changelog.py --changelog CHANGELOG.md \
+              --section "$VERSION" --version "$VERSION" \
+              --manifest pkg_wendfold/pkg_wendfold.xml \
+              --notes-out build/release-notes.md
+          else
+            echo "::warning::CHANGELOG.md has no '## [${VERSION}]' section; the draft notes have no changelog entries"
+            : > build/release-notes.md
+          fi
+          if grep -qF -e '<!--' -e '-->' build/release-notes.md; then
+            echo "::error::build/release-notes.md still contains an HTML comment"; exit 1
+          fi
+          {
+            echo
+            echo "---"
+            echo "**Download:** ${DOWNLOAD_BASE}/pkg_wendfold_v${VERSION}.zip (primary). The assets on this release are a mirror."
+            echo
+            echo "**Install:** upload \`pkg_wendfold_v${VERSION}.zip\` in Joomla under System > Install > Extensions."
+            echo
+            echo "**Verify:** \`sha256sum -c SHA256SUMS-v${VERSION}.txt\`"
+          } >> build/release-notes.md
+          cat build/release-notes.md
+
+      - name: Stage release assets (package only)
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          rm -rf "$STAGE_DIR"
+          mkdir -p "$STAGE_DIR"
+          cp "build/dist/pkg_wendfold_v${VERSION}.zip" "$STAGE_DIR/"
+          # Package-only, versioned checksum file: the same file the site
+          # bundle publishes, so the GitHub mirror and wendfold.com match.
+          # build/dist/SHA256SUMS.txt also lists the child ZIPs and is not
+          # a release asset.
+          cp "${BUNDLE_DIR}/downloads/SHA256SUMS-v${VERSION}.txt" "$STAGE_DIR/"
+          cp build/release-assets/pkg_wendfold.xml "$STAGE_DIR/"
+          cp "build/wendfold-site-bundle-v${VERSION}.zip" "$STAGE_DIR/"
+          (cd "$STAGE_DIR" && sha256sum -c --strict "SHA256SUMS-v${VERSION}.txt")
+          ls -l "$STAGE_DIR"
+
+      - name: Guard - release assets are package-only
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          allowed=(
+            "pkg_wendfold_v${VERSION}.zip"
+            "SHA256SUMS-v${VERSION}.txt"
+            "pkg_wendfold.xml"
+            "wendfold-site-bundle-v${VERSION}.zip"
+          )
+          fail=0
+          # Every entry must be a plain file at the top of STAGE_DIR, must not
+          # be a child ZIP, and must be on the allowlist.
+          while IFS= read -r -d '' path; do
+            name="${path#"${STAGE_DIR}"/}"
+            if [[ -L "$path" || ! -f "$path" || "$name" == */* ]]; then
+              echo "::error::not a plain top-level file in ${STAGE_DIR}: ${name}"; fail=1; continue
+            fi
+            case "$name" in
+              com_*|plg_*) echo "::error::child ZIP staged for the release: ${name}"; fail=1; continue ;;
+            esac
+            ok=0
+            for a in "${allowed[@]}"; do [[ "$name" == "$a" ]] && ok=1; done
+            [[ "$ok" == 1 ]] || { echo "::error::not on the release asset allowlist: ${name}"; fail=1; }
+          done < <(find "$STAGE_DIR" -mindepth 1 -print0)
+          for a in "${allowed[@]}"; do
+            [[ -f "${STAGE_DIR}/${a}" ]] || { echo "::error::missing release asset ${a}"; fail=1; }
+          done
+          sums="${STAGE_DIR}/SHA256SUMS-v${VERSION}.txt"
+          if [[ -f "$sums" ]]; then
+            listed=$(awk '{ sub(/^\*/, "", $2); print $2 }' "$sums")
+            [[ "$listed" == "pkg_wendfold_v${VERSION}.zip" ]] \
+              || { echo "::error::${sums##*/} must list only pkg_wendfold_v${VERSION}.zip, lists: ${listed//$'\n'/ }"; fail=1; }
+          fi
+          bundle="${STAGE_DIR}/wendfold-site-bundle-v${VERSION}.zip"
+          if [[ -f "$bundle" ]]; then
+            entries=$(unzip -Z1 "$bundle")
+            if grep -E '(^|/)(com|plg)_[^/]*$' <<< "$entries"; then
+              echo "::error::${bundle##*/} contains child ZIPs (listed above)"; fail=1
+            fi
+          fi
+          [[ "$fail" == 0 ]] || exit 1
+          echo "Release assets OK (package only): ${allowed[*]}"
+
+      - name: Create DRAFT release (never published automatically)
+        env:
+          VERSION: ${{ steps.tag.outputs.version }}
+          PRERELEASE: ${{ steps.tag.outputs.prerelease }}
+        run: |
+          set -euo pipefail
+          # Upload exactly what the Guard step checked, nothing else.
+          assets=()
+          while IFS= read -r -d '' f; do assets+=("$f"); done \
+            < <(find "$STAGE_DIR" -mindepth 1 -maxdepth 1 -type f -print0 | LC_ALL=C sort -z)
+          [[ ${#assets[@]} -eq 4 ]] || { echo "::error::expected 4 staged assets, found ${#assets[@]}"; exit 1; }
+          printf 'Asset: %s\n' "${assets[@]}"
+
+          if gh release view "$TAG" --json isDraft --jq .isDraft >/tmp/isdraft 2>/dev/null; then
+            # Re-run: only ever touch a release that is still a draft.
+            if [[ "$(cat /tmp/isdraft)" != "true" ]]; then
+              echo "::error::Release $TAG is already published; refusing to modify it."; exit 1
+            fi
+            echo "Draft release $TAG exists; replacing assets."
+            # Drop assets an older workflow version attached (for example the
+            # child ZIPs or SHA256SUMS.txt) so the draft ends up package-only.
+            keep=" "
+            for f in "${assets[@]}"; do keep+="${f##*/} "; done
+            while IFS= read -r old; do
+              [[ -z "$old" || "$keep" == *" ${old} "* ]] && continue
+              echo "Removing asset not on the allowlist from draft $TAG: ${old}"
+              gh release delete-asset "$TAG" "$old" --yes
+            done < <(gh release view "$TAG" --json assets --jq '.assets[].name')
+            gh release upload "$TAG" "${assets[@]}" --clobber
+          else
+            flags=(--draft --verify-tag --title "Wendfold ${TAG}" --notes-file build/release-notes.md)
+            [[ "$PRERELEASE" == "true" ]] && flags+=(--prerelease)
+            gh release create "$TAG" "${flags[@]}" "${assets[@]}"
+          fi
+          echo "Draft release ready: $(gh release view "$TAG" --json url --jq .url)"
+          echo "Review the assets and notes, then publish it by hand."
